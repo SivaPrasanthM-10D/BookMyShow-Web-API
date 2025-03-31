@@ -18,9 +18,9 @@ namespace BookMyShow.Controllers
 
         [HttpPost]
         [Route("bookTicket")]
-        public IActionResult BookTicket(BookTicketDto bookTicketDto)
+        public async Task<IActionResult> BookTicket(BookTicketDto bookTicketDto)
         {
-            Ticket? response = _ticketRepository.BookTicket(bookTicketDto);
+            Ticket? response = await _ticketRepository.BookTicketAsync(bookTicketDto);
             if (response == null)
             {
                 return BadRequest("Booking failed.");
@@ -30,9 +30,9 @@ namespace BookMyShow.Controllers
 
         [HttpGet]
         [Route("availableSeats/{showId:guid}")]
-        public IActionResult GetAvailableSeats(Guid showId)
+        public async Task<IActionResult> GetAvailableSeats(Guid showId)
         {
-            AvailableSeatsDto? response = _ticketRepository.GetAvailableSeats(showId);
+            AvailableSeatsDto? response = await _ticketRepository.GetAvailableSeatsAsync(showId);
             if (response == null)
             {
                 return NotFound("Show not found");
@@ -43,9 +43,9 @@ namespace BookMyShow.Controllers
 
         [HttpDelete]
         [Route("cancelTicket/{ticketId:guid}")]
-        public IActionResult CancelTicket(Guid ticketId)
+        public async Task<IActionResult> CancelTicket(Guid ticketId)
         {
-            string? response = _ticketRepository.CancelTicket(ticketId);
+            string? response = await _ticketRepository.CancelTicketAsync(ticketId);
             if (response == null)
             {
                 return NotFound("Ticket or Show not found");
@@ -55,10 +55,9 @@ namespace BookMyShow.Controllers
 
         [HttpGet]
         [Route("ticketDetails/{ticketId:guid}")]
-        public IActionResult GetTicketDetails(Guid ticketId)
+        public async Task<IActionResult> GetTicketDetails(Guid ticketId)
         {
-            TicketDetailsDto? response = _ticketRepository.GetTicketDetails(ticketId);
-
+            TicketDetailsDto? response = await _ticketRepository.GetTicketDetailsAsync(ticketId);
             if (response == null)
             {
                 return NotFound("Ticket not found");
@@ -68,9 +67,9 @@ namespace BookMyShow.Controllers
 
         [HttpGet]
         [Route("bookedTickets")]
-        public IActionResult GetBookedTickets()
+        public async Task<IActionResult> GetBookedTickets()
         {
-            List<BookedTicketsDto> bookedTickets = _ticketRepository.GetBookedTickets();
+            List<BookedTicketsDto> bookedTickets = await _ticketRepository.GetBookedTicketsAsync();
             if (!bookedTickets.Any())
             {
                 return NotFound("No booked tickets found.");
@@ -81,9 +80,9 @@ namespace BookMyShow.Controllers
 
         [HttpGet]
         [Route("customerTickets/{customerId:guid}")]
-        public IActionResult GetTicketsByCustomer(Guid customerId)
+        public async Task<IActionResult> GetTicketsByCustomer(Guid customerId)
         {
-            List<BookedTicketsDto> customerTickets = _ticketRepository.GetTicketsByCustomer(customerId);
+            List<BookedTicketsDto> customerTickets = await _ticketRepository.GetTicketsByCustomerAsync(customerId);
             if (!customerTickets.Any())
             {
                 return NotFound($"No tickets found for {customerId}");

@@ -17,17 +17,17 @@ namespace BookMyShow.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetTheatreOwners()
+        public async Task<IActionResult> GetTheatreOwners()
         {
-            List<User> TheatreOwners = _theatreOwnerRepository.GetTheatreOwners();
-            return Ok(TheatreOwners);
+            List<User> theatreOwners = await _theatreOwnerRepository.GetTheatreOwnersAsync();
+            return Ok(theatreOwners);
         }
 
         [HttpGet]
         [Route("{ownerid:guid}")]
-        public IActionResult GetTheatre(Guid ownerid)
+        public async Task<IActionResult> GetTheatre(Guid ownerid)
         {
-            TheatreOwnerSummaryDto? response = _theatreOwnerRepository.GetTheatre(ownerid);
+            TheatreOwnerSummaryDto? response = await _theatreOwnerRepository.GetTheatreAsync(ownerid);
             if (response == null)
             {
                 return BadRequest("Theatre Owner not found.");
@@ -37,9 +37,9 @@ namespace BookMyShow.Controllers
 
         [HttpPost]
         [Route("{ownerid:guid}")]
-        public IActionResult AddTheatreToTheatreOwner(Guid ownerid, AddTheatreDto addtheatredto)
+        public async Task<IActionResult> AddTheatreToTheatreOwner(Guid ownerid, AddTheatreDto addtheatredto)
         {
-            AddScreenResponseDto.TheatreDto? response = _theatreOwnerRepository.AddTheatreToTheatreOwner(ownerid, addtheatredto);
+            AddScreenResponseDto.TheatreDto? response = await _theatreOwnerRepository.AddTheatreToTheatreOwnerAsync(ownerid, addtheatredto);
             if (response == null)
             {
                 return BadRequest("Theatre Owner Not Found");

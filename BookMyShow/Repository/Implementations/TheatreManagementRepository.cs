@@ -3,7 +3,6 @@ using BookMyShow.Data;
 using BookMyShow.Data.Entities;
 using BookMyShow.Models;
 using BookMyShow.Repository.IRepository;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookMyShow.Repository.Implementations

@@ -560,25 +560,15 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookMyShow.Controllers.UsersController",
-    "Method": "GetAllUsers",
-    "RelativePath": "api/Users",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BookMyShow.Controllers.UsersController",
-    "Method": "AddUsers",
-    "RelativePath": "api/Users",
+    "ContainingType": "BookMyShow.Controllers.UserController",
+    "Method": "AddUser",
+    "RelativePath": "api/User/addUser",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "adduserdto",
+        "Name": "addUserDto",
         "Type": "BookMyShow.Models.AddUserDto",
         "IsRequired": true
       }
@@ -586,9 +576,19 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookMyShow.Controllers.UsersController",
+    "ContainingType": "BookMyShow.Controllers.UserController",
+    "Method": "GetAllUsers",
+    "RelativePath": "api/User/allUsers",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookMyShow.Controllers.UserController",
     "Method": "DeleteUser",
-    "RelativePath": "api/Users/{userid}",
+    "RelativePath": "api/User/deleteUser/{userid}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,

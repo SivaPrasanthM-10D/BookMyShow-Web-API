@@ -18,10 +18,10 @@ namespace BookMyShow.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllMovies()
+        public async Task<IActionResult> GetAllMovies()
         {
-            Task<List<Movie>?> movies = _movieRepository.GetAllMoviesAsync();
-            if (movies is null)
+            List<Movie>? movies = await _movieRepository.GetAllMoviesAsync();
+            if (movies == null)
             {
                 return NotFound();
             }
@@ -30,10 +30,10 @@ namespace BookMyShow.Controllers
 
         [HttpGet]
         [Route("{id:guid}")]
-        public IActionResult GetMovieById(Guid id)
+        public async Task<IActionResult> GetMovieById(Guid id)
         {
-            Task<Movie?> movie = _movieRepository.GetMovieByIdAsync(id);
-            if(movie is null)
+            Movie? movie = await _movieRepository.GetMovieByIdAsync(id);
+            if (movie == null)
             {
                 return NotFound();
             }
@@ -42,10 +42,10 @@ namespace BookMyShow.Controllers
 
         [HttpGet]
         [Route("{title}")]
-        public IActionResult GetMovieByTitle(string title)
+        public async Task<IActionResult> GetMovieByTitle(string title)
         {
-            Task<List<Movie>?> movies = _movieRepository.GetMovieByTitleAsync(title);
-            if (movies is null)
+            List<Movie>? movies = await _movieRepository.GetMovieByTitleAsync(title);
+            if (movies == null)
             {
                 return NotFound();
             }
@@ -53,9 +53,9 @@ namespace BookMyShow.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddMovie(AddMovieDto addmoviedto)
+        public async Task<IActionResult> AddMovie(AddMovieDto addmoviedto)
         {
-            Task<Movie?> result = _movieRepository.AddMovieAsync(addmoviedto);
+            Movie? result = await _movieRepository.AddMovieAsync(addmoviedto);
             if (result == null)
             {
                 return BadRequest("Invalid AdminId");
@@ -65,10 +65,10 @@ namespace BookMyShow.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
-        public IActionResult UpdateMovie(Guid id, UpdateMovieDto updatemoviedto)
+        public async Task<IActionResult> UpdateMovie(Guid id, UpdateMovieDto updatemoviedto)
         {
-            Task<Movie?> movie = _movieRepository.UpdateMovieAsync(id, updatemoviedto);
-            if (movie is null)
+            Movie? movie = await _movieRepository.UpdateMovieAsync(id, updatemoviedto);
+            if (movie == null)
             {
                 return NotFound();
             }
@@ -77,10 +77,10 @@ namespace BookMyShow.Controllers
 
         [HttpDelete]
         [Route("{id:guid}")]
-        public IActionResult DeleteMovie(Guid id)
+        public async Task<IActionResult> DeleteMovie(Guid id)
         {
-            Task<string?> result = _movieRepository.DeleteMovieAsync(id);
-            if (result is null)
+            string? result = await _movieRepository.DeleteMovieAsync(id);
+            if (result == null)
             {
                 return NotFound("Movie not found.");
             }
@@ -89,14 +89,14 @@ namespace BookMyShow.Controllers
 
         [HttpPatch]
         [Route("{id:guid}")]
-        public IActionResult EditMovie(Guid id, [FromBody] JsonPatchDocument<Movie> patchmovie)
+        public async Task<IActionResult> EditMovie(Guid id, [FromBody] JsonPatchDocument<Movie> patchmovie)
         {
-            if (patchmovie is null)
+            if (patchmovie == null)
             {
                 return BadRequest();
             }
-            Task<Movie?> movie = _movieRepository.EditMovieAsync(id, patchmovie);
-            if (movie is null)
+            Movie? movie = await _movieRepository.EditMovieAsync(id, patchmovie);
+            if (movie == null)
             {
                 return NotFound();
             }
@@ -105,22 +105,22 @@ namespace BookMyShow.Controllers
 
         [HttpGet]
         [Route("reviews/{movieId:guid}")]
-        public IActionResult GetReviewsByMovieId(Guid movieId)
+        public async Task<IActionResult> GetReviewsByMovieId(Guid movieId)
         {
-           Task<List<ReviewResponse>?> review = _movieRepository.GetReviewsByMovieIdAsync(movieId);
-           if(review is null)
+            List<ReviewResponse>? review = await _movieRepository.GetReviewsByMovieIdAsync(movieId);
+            if (review == null)
             {
                 return NotFound();
             }
-           return Ok(review);
+            return Ok(review);
         }
 
         [HttpDelete]
         [Route("deleteReview/{id:guid}")]
-        public IActionResult DeleteReview(Guid id)
+        public async Task<IActionResult> DeleteReview(Guid id)
         {
-            Task<string?> result = _movieRepository.DeleteReviewAsync(id);
-            return result is null? NotFound() : Ok(result);
+            string? result = await _movieRepository.DeleteReviewAsync(id);
+            return result == null ? NotFound() : Ok(result);
         }
     }
 }

@@ -991,20 +991,22 @@
         }
       }
     },
-    "/api/Users": {
+    "/api/User/allUsers": {
       "get": {
         "tags": [
-          "Users"
+          "User"
         ],
         "responses": {
           "200": {
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/User/addUser": {
       "post": {
         "tags": [
-          "Users"
+          "User"
         ],
         "requestBody": {
           "content": {
@@ -1037,10 +1039,10 @@
         }
       }
     },
-    "/api/Users/{userid}": {
+    "/api/User/deleteUser/{userid}": {
       "delete": {
         "tags": [
-          "Users"
+          "User"
         ],
         "parameters": [
           {

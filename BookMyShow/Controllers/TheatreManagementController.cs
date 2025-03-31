@@ -17,9 +17,9 @@ namespace BookMyShow.Controllers
 
         [HttpGet]
         [Route("Theatres")]
-        public IActionResult GetAllTheatres()
+        public async Task<IActionResult> GetAllTheatres()
         {
-            List<TheatreResponseDto> theatres = _theatreManagementRepository.GetAllTheatres();
+            List<TheatreResponseDto> theatres = await _theatreManagementRepository.GetAllTheatresAsync();
             if (!theatres.Any())
             {
                 return NotFound("No theatres found.");
@@ -29,10 +29,10 @@ namespace BookMyShow.Controllers
 
         [HttpGet]
         [Route("Screens/{theatreid:guid}")]
-        public IActionResult GetAllScreens(Guid theatreid)
+        public async Task<IActionResult> GetAllScreens(Guid theatreid)
         {
-            List<ScreenResponseDto> screens = _theatreManagementRepository.GetAllScreens(theatreid);
-            if(!screens.Any())
+            List<ScreenResponseDto> screens = await _theatreManagementRepository.GetAllScreensAsync(theatreid);
+            if (!screens.Any())
             {
                 return NotFound("No Screens found.");
             }
@@ -41,28 +41,33 @@ namespace BookMyShow.Controllers
 
         [HttpGet]
         [Route("Shows/{screenid:guid}")]
-        public IActionResult GetAllShows(Guid screenid)
+        public async Task<IActionResult> GetAllShows(Guid screenid)
         {
-            List<ShowResponseDto> shows = _theatreManagementRepository.GetAllShows(screenid);
-
-            if (!shows.Any()) return NotFound("No shows found.");
+            List<ShowResponseDto> shows = await _theatreManagementRepository.GetAllShowsAsync(screenid);
+            if (!shows.Any())
+            {
+                return NotFound("No shows found.");
+            }
             return Ok(shows);
         }
 
         [HttpPost]
         [Route("addScreen")]
-        public IActionResult AddScreen(AddScreenDto addScreenDto)
+        public async Task<IActionResult> AddScreen(AddScreenDto addScreenDto)
         {
-            ScreenResponseDto? response = _theatreManagementRepository.AddScreen(addScreenDto);
-            if(response is null) return BadRequest("Theatre not found. Can't add screen.");
+            ScreenResponseDto? response = await _theatreManagementRepository.AddScreenAsync(addScreenDto);
+            if (response == null)
+            {
+                return BadRequest("Theatre not found. Can't add screen.");
+            }
             return Ok(response);
         }
 
         [HttpDelete]
         [Route("deleteScreen/{screenId:guid}")]
-        public IActionResult DeleteScreen(Guid screenId)
+        public async Task<IActionResult> DeleteScreen(Guid screenId)
         {
-            string? response = _theatreManagementRepository.DeleteScreen(screenId);
+            string? response = await _theatreManagementRepository.DeleteScreenAsync(screenId);
             if (response == null)
             {
                 return BadRequest("Screen not found.");
@@ -72,9 +77,9 @@ namespace BookMyShow.Controllers
 
         [HttpPut]
         [Route("updateScreen/{screenId:guid}")]
-        public IActionResult UpdateScreen(Guid screenId, UpdateScreenDto updateScreenDto)
+        public async Task<IActionResult> UpdateScreen(Guid screenId, UpdateScreenDto updateScreenDto)
         {
-            ScreenResponseDto? response = _theatreManagementRepository.UpdateScreen(screenId, updateScreenDto);
+            ScreenResponseDto? response = await _theatreManagementRepository.UpdateScreenAsync(screenId, updateScreenDto);
             if (response == null)
             {
                 return BadRequest("Screen not found.");
@@ -84,10 +89,9 @@ namespace BookMyShow.Controllers
 
         [HttpPost]
         [Route("addShow")]
-        public IActionResult AddShow(AddShowDto addShowDto)
+        public async Task<IActionResult> AddShow(AddShowDto addShowDto)
         {
-            ShowResponseDto? response = _theatreManagementRepository.AddShow(addShowDto);
-
+            ShowResponseDto? response = await _theatreManagementRepository.AddShowAsync(addShowDto);
             if (response == null)
             {
                 return BadRequest("Screen not found");
@@ -97,9 +101,9 @@ namespace BookMyShow.Controllers
 
         [HttpDelete]
         [Route("deleteShow/{showId:guid}")]
-        public IActionResult DeleteShow(Guid showId)
+        public async Task<IActionResult> DeleteShow(Guid showId)
         {
-            string? response = _theatreManagementRepository.DeleteShow(showId);
+            string? response = await _theatreManagementRepository.DeleteShowAsync(showId);
             if (response == null)
             {
                 return BadRequest("Show not found to delete.");
@@ -109,9 +113,9 @@ namespace BookMyShow.Controllers
 
         [HttpPut]
         [Route("updateShow/{showId:guid}")]
-        public IActionResult UpdateShow(Guid showId, UpdateShowDto updateShowDto)
+        public async Task<IActionResult> UpdateShow(Guid showId, UpdateShowDto updateShowDto)
         {
-            ShowResponseDto? response = _theatreManagementRepository.UpdateShow(showId, updateShowDto);
+            ShowResponseDto? response = await _theatreManagementRepository.UpdateShowAsync(showId, updateShowDto);
             if (response == null)
             {
                 return BadRequest("Show not found. Can't update show.");
@@ -121,10 +125,10 @@ namespace BookMyShow.Controllers
 
         [HttpDelete]
         [Route("{ownerId:guid}")]
-        public IActionResult RemoveTheatreofTheatreOwner(Guid ownerId)
+        public async Task<IActionResult> RemoveTheatreofTheatreOwner(Guid ownerId)
         {
-            string? response = _theatreManagementRepository.RemoveTheatreofTheatreOwner(ownerId);
-            if (response is null)
+            string? response = await _theatreManagementRepository.RemoveTheatreofTheatreOwnerAsync(ownerId);
+            if (response == null)
             {
                 return BadRequest("Theatre Owner not found.");
             }

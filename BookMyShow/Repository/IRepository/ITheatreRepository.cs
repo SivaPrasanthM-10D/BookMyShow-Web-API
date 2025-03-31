@@ -6,8 +6,8 @@ namespace BookMyShow.Repository.IRepository
 {
     public interface ITheatreRepository
     {
-        List<User> GetTheatreOwners();
-        TheatreOwnerSummaryDto? GetTheatre(Guid ownerid);
-        TheatreDto? AddTheatreToTheatreOwner(Guid ownerid, AddTheatreDto addtheatredto);
+        Task<List<User>> GetTheatreOwnersAsync();
+        Task<TheatreOwnerSummaryDto?> GetTheatreAsync(Guid ownerid);
+        Task<TheatreDto?> AddTheatreToTheatreOwnerAsync(Guid ownerid, AddTheatreDto addtheatredto);
     }
 }

@@ -17,10 +17,10 @@ namespace BookMyShow.Controllers
 
         [HttpPost]
         [Route("addReview")]
-        public IActionResult AddReview(AddReviewDto addReviewDto)
+        public async Task<IActionResult> AddReview(AddReviewDto addReviewDto)
         {
-            Task<ReviewResponse?> result = _reviewRepository.AddReviewAsync(addReviewDto);
-            if(result is null)
+            ReviewResponse? result = await _reviewRepository.AddReviewAsync(addReviewDto);
+            if (result == null)
             {
                 return BadRequest();
             }
@@ -29,10 +29,10 @@ namespace BookMyShow.Controllers
 
         [HttpPut]
         [Route("updateReview/{id:guid}")]
-        public IActionResult UpdateReview(Guid id, UpdateReviewDto updateReviewDto)
+        public async Task<IActionResult> UpdateReview(Guid id, UpdateReviewDto updateReviewDto)
         {
-            Task<ReviewResponse?> result = _reviewRepository.UpdateReviewAsync(id, updateReviewDto);
-            if (result is null)
+            ReviewResponse? result = await _reviewRepository.UpdateReviewAsync(id, updateReviewDto);
+            if (result == null)
             {
                 return NotFound("Review not found");
             }
@@ -41,10 +41,10 @@ namespace BookMyShow.Controllers
 
         [HttpGet]
         [Route("reviews/{movieId:guid}")]
-        public IActionResult GetReviewsByMovieId(Guid movieId)
+        public async Task<IActionResult> GetReviewsByMovieId(Guid movieId)
         {
-            Task<List<ReviewResponse>?> reviews = _reviewRepository.GetReviewsByMovieIdAsync(movieId);
-            if(reviews is null)
+            List<ReviewResponse>? reviews = await _reviewRepository.GetReviewsByMovieIdAsync(movieId);
+            if (reviews == null)
             {
                 return NotFound();
             }
@@ -53,10 +53,10 @@ namespace BookMyShow.Controllers
 
         [HttpDelete]
         [Route("deleteReview/{reviewid:guid}")]
-        public IActionResult DeleteReview(Guid reviewid)
+        public async Task<IActionResult> DeleteReview(Guid reviewid)
         {
-            Task<string?> review = _reviewRepository.DeleteReviewAsync(reviewid);
-            if (review is null)
+            string? review = await _reviewRepository.DeleteReviewAsync(reviewid);
+            if (review == null)
             {
                 return NotFound();
             }

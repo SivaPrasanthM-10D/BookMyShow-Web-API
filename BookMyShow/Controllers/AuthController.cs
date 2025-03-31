@@ -18,7 +18,7 @@ namespace BookMyShow.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
-            var result = await _authRepository.RegisterAsync(registerDto);
+            ServiceResult result = await _authRepository.RegisterAsync(registerDto);
             if (!result.Success)
             {
                 return BadRequest(result.Message);
@@ -29,7 +29,7 @@ namespace BookMyShow.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            var result = await _authRepository.LoginAsync(loginDto);
+            ServiceResult result = await _authRepository.LoginAsync(loginDto);
             if (!result.Success)
             {
                 return Unauthorized(result.Message);
@@ -40,7 +40,7 @@ namespace BookMyShow.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            var result = await _authRepository.LogoutAsync();
+            ServiceResult result = await _authRepository.LogoutAsync();
             if (!result.Success)
             {
                 return BadRequest(result.Message);
