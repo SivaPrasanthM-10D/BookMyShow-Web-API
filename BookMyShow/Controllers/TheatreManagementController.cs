@@ -1,10 +1,6 @@
-﻿using System.Globalization;
-using BookMyShow.Data;
-using BookMyShow.Data.Entities;
-using BookMyShow.Models;
+﻿using BookMyShow.Models;
+using BookMyShow.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace BookMyShow.Controllers
 {
@@ -12,30 +8,22 @@ namespace BookMyShow.Controllers
     [ApiController]
     public class TheatreManagementController : ControllerBase
     {
-        private readonly BookMyShowDbContext dbContext;
+        public required ITheatreManagementRepository _theatreManagementRepository;
 
-        public TheatreManagementController(BookMyShowDbContext dbContext)
+        public TheatreManagementController(ITheatreManagementRepository theatreManagementRepository)
         {
-            this.dbContext = dbContext;
+            _theatreManagementRepository = theatreManagementRepository;
         }
 
         [HttpGet]
         [Route("Theatres")]
         public IActionResult GetAllTheatres()
         {
-            var theatres = dbContext.Theatres
-                .Include(t => t.TheatreOwner)
-                .Include(t => t.Screens)
-                .Select(t => new
-                {
-                    t.TheatreId,
-                    t.TheatreName,
-                    t.TheatreOwnerId,
-                    t.TheatreOwner.TheatreOwnerName,
-                    ScreenCount = t.Screens.Count,
-                    Address = t.Street+", "+t.City
-                })
-                .ToList();
+            List<TheatreResponseDto> theatres = _theatreManagementRepository.GetAllTheatres();
+            if (!theatres.Any())
+            {
+                return NotFound("No theatres found.");
+            }
             return Ok(theatres);
         }
 
@@ -43,29 +31,11 @@ namespace BookMyShow.Controllers
         [Route("Screens/{theatreid:guid}")]
         public IActionResult GetAllScreens(Guid theatreid)
         {
-            var screens = dbContext.Screens
-                .Include(s => s.Theatre)
-                    .ThenInclude(t => t.TheatreOwner)
-                .Include(s => s.Shows)
-                .Where(s => s.TheatreId == theatreid)
-                .Select(s => new
-                {
-                    s.ScreenId,
-                    s.ScreenNumber,
-                    s.TheatreId,
-                    s.Theatre.TheatreName,
-                    Shows = s.Shows.Select(sh => new
-                    {
-                        sh.ShowId,
-                        sh.MovieId,
-                        ShowTime = DateTime.Today.Add(sh.ShowTime).ToString("hh:mm tt", CultureInfo.InvariantCulture),
-                        ShowDate = sh.ShowDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
-                        SeatsAvailableCount = sh.AvailableSeats.Count,
-                        sh.TicketPrice
-                    }).ToList()
-                })
-                .ToList();
-
+            List<ScreenResponseDto> screens = _theatreManagementRepository.GetAllScreens(theatreid);
+            if(!screens.Any())
+            {
+                return NotFound("No Screens found.");
+            }
             return Ok(screens);
         }
 
@@ -73,26 +43,9 @@ namespace BookMyShow.Controllers
         [Route("Shows/{screenid:guid}")]
         public IActionResult GetAllShows(Guid screenid)
         {
-            var shows = dbContext.Shows
-                .Include(s => s.Screen)
-                    .ThenInclude(sc => sc.Theatre)
-                        .ThenInclude(t => t.TheatreOwner)
-                    .Where(s => s.ScreenId == screenid)
-                .Select(s => new ShowResponseDto
-                {
-                    ShowId = s.ShowId,
-                    ScreenId = s.ScreenId,
-                    ScreenNumber = s.Screen.ScreenNumber,
-                    TheatreId = s.Screen.TheatreId,
-                    TheatreName = s.Screen.Theatre.TheatreName,
-                    MovieId = s.MovieId,
-                    ShowTime = DateTime.Today.Add(s.ShowTime).ToString("hh:mm tt", CultureInfo.InvariantCulture),
-                    ShowDate = s.ShowDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
-                    AvailableSeats = s.AvailableSeats,
-                    TicketPrice = s.TicketPrice
-                })
-                .ToList();
+            List<ShowResponseDto> shows = _theatreManagementRepository.GetAllShows(screenid);
 
+            if (!shows.Any()) return NotFound("No shows found.");
             return Ok(shows);
         }
 
@@ -100,195 +53,82 @@ namespace BookMyShow.Controllers
         [Route("addScreen")]
         public IActionResult AddScreen(AddScreenDto addScreenDto)
         {
-            var theatre = dbContext.Theatres
-                .Include(t => t.TheatreOwner)
-                .Include(t => t.Screens)
-                .FirstOrDefault(t => t.TheatreId == addScreenDto.TheatreId);
-            if (theatre == null)
-            {
-                return BadRequest("Theatre not found");
-            }
-
-            var screen = new Screen
-            {
-                ScreenNumber = addScreenDto.ScreenNumber,
-                TheatreId = addScreenDto.TheatreId
-            };
-
-            dbContext.Screens.Add(screen);
-            dbContext.SaveChanges();
-
-            screen = dbContext.Screens
-                .Include(s => s.Theatre)
-                    .ThenInclude(t => t.TheatreOwner)
-                .Include(s => s.Shows)
-                .FirstOrDefault(s => s.ScreenId == screen.ScreenId)!;
-
-            var response = new
-            {
-                screen.ScreenId,
-                screen.ScreenNumber,
-                screen.TheatreId,
-                Theatre = new
-                {
-                    screen.Theatre.TheatreId,
-                    screen.Theatre.TheatreName,
-                    screen.Theatre.TheatreOwnerId,
-                    TheatreOwner = new
-                    {
-                        screen.Theatre.TheatreOwner.TheatreOwnerId,
-                        screen.Theatre.TheatreOwner.TheatreOwnerName
-                    },
-                    screen.Theatre.City,
-                    screen.Theatre.Street
-                },
-                Shows = screen.Shows.Select(sh => new
-                {
-                    sh.ShowId,
-                    sh.MovieId,
-                    sh.ShowTime,
-                    sh.ShowDate,
-                    sh.AvailableSeats,
-                    sh.TicketPrice
-                }).ToList()
-            };
-
-            return Ok(JsonConvert.SerializeObject(response, new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            }));
+            ScreenResponseDto? response = _theatreManagementRepository.AddScreen(addScreenDto);
+            if(response is null) return BadRequest("Theatre not found. Can't add screen.");
+            return Ok(response);
         }
 
         [HttpDelete]
         [Route("deleteScreen/{screenId:guid}")]
         public IActionResult DeleteScreen(Guid screenId)
         {
-            var screen = dbContext.Screens.Find(screenId);
-            if (screen == null)
+            string? response = _theatreManagementRepository.DeleteScreen(screenId);
+            if (response == null)
             {
-                return NotFound();
+                return BadRequest("Screen not found.");
             }
-
-            dbContext.Screens.Remove(screen);
-            dbContext.SaveChanges();
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPut]
         [Route("updateScreen/{screenId:guid}")]
         public IActionResult UpdateScreen(Guid screenId, UpdateScreenDto updateScreenDto)
         {
-            var screen = dbContext.Screens.Find(screenId);
-            if (screen == null)
+            ScreenResponseDto? response = _theatreManagementRepository.UpdateScreen(screenId, updateScreenDto);
+            if (response == null)
             {
-                return NotFound();
+                return BadRequest("Screen not found.");
             }
-
-            screen.ScreenNumber = updateScreenDto.ScreenNumber;
-            dbContext.SaveChanges();
-            return Ok(JsonConvert.SerializeObject(screen, new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            }));
+            return Ok(response);
         }
 
         [HttpPost]
         [Route("addShow")]
         public IActionResult AddShow(AddShowDto addShowDto)
         {
-            var screen = dbContext.Screens
-                .Include(s => s.Theatre)
-                .FirstOrDefault(s => s.ScreenId == addShowDto.ScreenId);
+            ShowResponseDto? response = _theatreManagementRepository.AddShow(addShowDto);
 
-            if (screen == null)
+            if (response == null)
             {
                 return BadRequest("Screen not found");
             }
-
-            List<int> AvailableSeats = new List<int>();
-            for (int i = 1; i <= addShowDto.TotalSeats; i++)
-                AvailableSeats.Add(i);
-
-            var show = new Show
-            {
-                ScreenId = addShowDto.ScreenId,
-                MovieId = addShowDto.MovieId,
-                ShowTime = DateTime.ParseExact(addShowDto.ShowTime, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay,
-                ShowDate = DateTime.ParseExact(addShowDto.ShowDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                AvailableSeats = AvailableSeats,
-                TicketPrice = addShowDto.TicketPrice
-            };
-
-            dbContext.Shows.Add(show);
-            dbContext.SaveChanges();
-            return Ok(new ShowResponseDto
-            {
-                ShowId = show.ShowId,
-                ScreenId = show.ScreenId,
-                ScreenNumber = screen.ScreenNumber,
-                TheatreId = screen.TheatreId,
-                TheatreName = screen.Theatre.TheatreName,
-                MovieId = show.MovieId,
-                ShowTime = show.ShowTime.ToString(@"hh\:mm tt", CultureInfo.InvariantCulture),
-                ShowDate = show.ShowDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
-                AvailableSeats = show.AvailableSeats,
-                TicketPrice = show.TicketPrice
-            });
+            return Ok(response);
         }
 
         [HttpDelete]
         [Route("deleteShow/{showId:guid}")]
         public IActionResult DeleteShow(Guid showId)
         {
-            var show = dbContext.Shows.Find(showId);
-            if (show == null)
+            string? response = _theatreManagementRepository.DeleteShow(showId);
+            if (response == null)
             {
-                return NotFound();
+                return BadRequest("Show not found to delete.");
             }
-
-            dbContext.Shows.Remove(show);
-            dbContext.SaveChanges();
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPut]
         [Route("updateShow/{showId:guid}")]
         public IActionResult UpdateShow(Guid showId, UpdateShowDto updateShowDto)
         {
-            var show = dbContext.Shows.Find(showId);
-            if (show == null)
+            ShowResponseDto? response = _theatreManagementRepository.UpdateShow(showId, updateShowDto);
+            if (response == null)
             {
-                return NotFound();
+                return BadRequest("Show not found. Can't update show.");
             }
-
-            show.MovieId = updateShowDto.MovieId;
-            show.ShowTime = TimeSpan.ParseExact(updateShowDto.ShowTime, @"hh\:mm tt", CultureInfo.InvariantCulture);
-            show.ShowDate = DateTime.ParseExact(updateShowDto.ShowDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            show.AvailableSeats = updateShowDto.AvailableSeats;
-            show.TicketPrice = updateShowDto.TicketPrice;
-            dbContext.SaveChanges();
-            return Ok(JsonConvert.SerializeObject(show, new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            }));
+            return Ok(response);
         }
 
         [HttpDelete]
         [Route("{ownerId:guid}")]
         public IActionResult RemoveTheatreofTheatreOwner(Guid ownerId)
         {
-            var theatreOwner = dbContext.TheatreOwners.Find(ownerId);
-            if (theatreOwner is null)
+            string? response = _theatreManagementRepository.RemoveTheatreofTheatreOwner(ownerId);
+            if (response is null)
             {
                 return BadRequest("Theatre Owner not found.");
             }
-            var theatreids = dbContext.Theatres.Where(th => th.TheatreOwnerId == ownerId);
-            foreach (var theatre in theatreids)
-            {
-                dbContext.Theatres.Remove(theatre);
-            }
-            dbContext.SaveChanges();
-            return Ok();
+            return Ok(response);
         }
     }
 }

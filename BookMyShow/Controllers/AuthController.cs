@@ -1,5 +1,5 @@
-﻿using BookMyShow.Interfaces;
-using BookMyShow.Models;
+﻿using BookMyShow.Models;
+using BookMyShow.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookMyShow.Controllers
@@ -8,17 +8,17 @@ namespace BookMyShow.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IUserService userService;
+        private readonly IAuthRepository _authRepository;
 
-        public AuthController(IUserService userService)
+        public AuthController(IAuthRepository authRepository)
         {
-            this.userService = userService;
+            _authRepository = authRepository;
         }
 
         [HttpPost("register")]
-        public IActionResult Register(RegisterDto registerDto)
+        public async Task<IActionResult> Register(RegisterDto registerDto)
         {
-            var result = userService.Register(registerDto);
+            var result = await _authRepository.RegisterAsync(registerDto);
             if (!result.Success)
             {
                 return BadRequest(result.Message);
@@ -27,9 +27,9 @@ namespace BookMyShow.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginDto loginDto)
+        public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            var result = userService.Login(loginDto);
+            var result = await _authRepository.LoginAsync(loginDto);
             if (!result.Success)
             {
                 return Unauthorized(result.Message);
@@ -38,9 +38,9 @@ namespace BookMyShow.Controllers
         }
 
         [HttpPost("logout")]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            var result = userService.Logout();
+            var result = await _authRepository.LogoutAsync();
             if (!result.Success)
             {
                 return BadRequest(result.Message);

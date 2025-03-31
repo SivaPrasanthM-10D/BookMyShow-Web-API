@@ -1,92 +1,53 @@
-﻿using BookMyShow.Data;
-using BookMyShow.Data.Entities;
-using BookMyShow.Interfaces;
-using BookMyShow.Models;
+﻿using BookMyShow.Models;
+using BookMyShow.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookMyShow.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReviewsController : ControllerBase, IReviewsController
+    public class ReviewsController : ControllerBase
     {
-        private readonly BookMyShowDbContext dbContext;
+        public readonly IReviewRepository _reviewRepository;
 
-        public ReviewsController(BookMyShowDbContext dbContext)
+        public ReviewsController(IReviewRepository reviewRepository)
         {
-            this.dbContext = dbContext;
+            _reviewRepository = reviewRepository;
         }
 
         [HttpPost]
         [Route("addReview")]
         public IActionResult AddReview(AddReviewDto addReviewDto)
         {
-            MovieReview review = new()
+            Task<ReviewResponse?> result = _reviewRepository.AddReviewAsync(addReviewDto);
+            if(result is null)
             {
-                UserId = addReviewDto.UserId,
-                MovieId = addReviewDto.MovieId,
-                Rating = addReviewDto.Rating,
-                Review = addReviewDto.Review
-            };
-
-            dbContext.MovieReviews.Add(review);
-            dbContext.SaveChanges();
-
-            review = dbContext.MovieReviews
-                .Include(r => r.User)
-                .Include(r => r.Movie)
-                .FirstOrDefault(r => r.ReviewId == review.ReviewId)!;
-
-            return Ok(new
-            {
-                review.ReviewId,
-                review.UserId,
-                review.MovieId,
-                review.Rating,
-                review.Review
-            });
+                return BadRequest();
+            }
+            return Ok(result);
         }
 
         [HttpPut]
         [Route("updateReview/{id:guid}")]
         public IActionResult UpdateReview(Guid id, UpdateReviewDto updateReviewDto)
         {
-            MovieReview? review = dbContext.MovieReviews.Find(id);
-            if (review is null)
+            Task<ReviewResponse?> result = _reviewRepository.UpdateReviewAsync(id, updateReviewDto);
+            if (result is null)
             {
-                return NotFound();
+                return NotFound("Review not found");
             }
-            review.Rating = updateReviewDto.Rating;
-            review.Review = updateReviewDto.Review;
-            dbContext.SaveChanges();
-            return Ok(new
-            {
-                review.ReviewId,
-                review.UserId,
-                review.MovieId,
-                review.Rating,
-                review.Review
-            });
+            return Ok(result);
         }
 
         [HttpGet]
         [Route("reviews/{movieId:guid}")]
         public IActionResult GetReviewsByMovieId(Guid movieId)
         {
-            var reviews = dbContext.MovieReviews
-                .Include(r => r.User)
-                .Include(r => r.Movie)
-                .Where(r => r.MovieId == movieId)
-                .Select(review => new
-                {
-                    review.ReviewId,
-                    review.UserId,
-                    review.MovieId,
-                    review.Rating,
-                    review.Review
-                })
-                .ToList();
+            Task<List<ReviewResponse>?> reviews = _reviewRepository.GetReviewsByMovieIdAsync(movieId);
+            if(reviews is null)
+            {
+                return NotFound();
+            }
             return Ok(reviews);
         }
 
@@ -94,14 +55,12 @@ namespace BookMyShow.Controllers
         [Route("deleteReview/{reviewid:guid}")]
         public IActionResult DeleteReview(Guid reviewid)
         {
-            MovieReview? review = dbContext.MovieReviews.Find(reviewid);
+            Task<string?> review = _reviewRepository.DeleteReviewAsync(reviewid);
             if (review is null)
             {
                 return NotFound();
             }
-            dbContext.MovieReviews.Remove(review);
-            dbContext.SaveChanges();
-            return Ok("Review deleted successfully");
+            return Ok(review);
         }
     }
 }

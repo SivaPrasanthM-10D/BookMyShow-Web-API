@@ -1,7 +1,6 @@
-﻿using BookMyShow.Data;
-using BookMyShow.Data.Entities;
-using BookMyShow.Interfaces;
+﻿using BookMyShow.Data.Entities;
 using BookMyShow.Models;
+using BookMyShow.Repository.IRepository;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,29 +8,32 @@ namespace BookMyShow.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MoviesController : ControllerBase, IMoviesController
+    public class MoviesController : ControllerBase
     {
-        private readonly BookMyShowDbContext dbContext;
-        private readonly IReviewsController reviewsController;
+        private readonly IMovieRepository _movieRepository;
 
-        public MoviesController(BookMyShowDbContext dbContext, IReviewsController reviewsController)
+        public MoviesController(IMovieRepository movieRepository)
         {
-            this.dbContext = dbContext;
-            this.reviewsController = reviewsController;
+            _movieRepository = movieRepository;
         }
 
         [HttpGet]
         public IActionResult GetAllMovies()
         {
-            return Ok(dbContext.Movies.ToList());
+            Task<List<Movie>?> movies = _movieRepository.GetAllMoviesAsync();
+            if (movies is null)
+            {
+                return NotFound();
+            }
+            return Ok(movies);
         }
 
         [HttpGet]
         [Route("{id:guid}")]
         public IActionResult GetMovieById(Guid id)
         {
-            Movie? movie = dbContext.Movies.Find(id);
-            if (movie is null)
+            Task<Movie?> movie = _movieRepository.GetMovieByIdAsync(id);
+            if(movie is null)
             {
                 return NotFound();
             }
@@ -42,8 +44,8 @@ namespace BookMyShow.Controllers
         [Route("{title}")]
         public IActionResult GetMovieByTitle(string title)
         {
-            List<Movie> movies = dbContext.Movies.Where(movie => movie.Title == title).ToList();
-            if (movies.Count == 0)
+            Task<List<Movie>?> movies = _movieRepository.GetMovieByTitleAsync(title);
+            if (movies is null)
             {
                 return NotFound();
             }
@@ -53,39 +55,23 @@ namespace BookMyShow.Controllers
         [HttpPost]
         public IActionResult AddMovie(AddMovieDto addmoviedto)
         {
-            var admin = dbContext.Admins.Find(addmoviedto.AdminId);
-            if (admin == null)
+            Task<Movie?> result = _movieRepository.AddMovieAsync(addmoviedto);
+            if (result == null)
             {
                 return BadRequest("Invalid AdminId");
             }
-            Movie movie = new Movie()
-            {
-                Title = addmoviedto.Title,
-                Genre = addmoviedto.Genre,
-                Duration = addmoviedto.Duration,
-                Rating = addmoviedto.Rating,
-                AdminId = addmoviedto.AdminId
-            };
-
-            dbContext.Movies.Add(movie);
-            dbContext.SaveChanges();
-            return Ok(movie);
+            return Ok(result);
         }
 
         [HttpPut]
         [Route("{id:guid}")]
         public IActionResult UpdateMovie(Guid id, UpdateMovieDto updatemoviedto)
         {
-            Movie? movie = dbContext.Movies.Find(id);
+            Task<Movie?> movie = _movieRepository.UpdateMovieAsync(id, updatemoviedto);
             if (movie is null)
             {
                 return NotFound();
             }
-            movie.Title = updatemoviedto.Title;
-            movie.Genre = updatemoviedto.Genre;
-            movie.Duration = updatemoviedto.Duration;
-            movie.Rating = updatemoviedto.Rating;
-            dbContext.SaveChanges();
             return Ok(movie);
         }
 
@@ -93,14 +79,12 @@ namespace BookMyShow.Controllers
         [Route("{id:guid}")]
         public IActionResult DeleteMovie(Guid id)
         {
-            Movie? movie = dbContext.Movies.Find(id);
-            if (movie is null)
+            Task<string?> result = _movieRepository.DeleteMovieAsync(id);
+            if (result is null)
             {
-                return NotFound();
+                return NotFound("Movie not found.");
             }
-            dbContext.Movies.Remove(movie);
-            dbContext.SaveChanges();
-            return Ok();
+            return Ok(result);
         }
 
         [HttpPatch]
@@ -111,13 +95,11 @@ namespace BookMyShow.Controllers
             {
                 return BadRequest();
             }
-            Movie? movie = dbContext.Movies.Find(id);
+            Task<Movie?> movie = _movieRepository.EditMovieAsync(id, patchmovie);
             if (movie is null)
             {
                 return NotFound();
             }
-            patchmovie.ApplyTo(movie);
-            dbContext.SaveChanges();
             return Ok(movie);
         }
 
@@ -125,14 +107,20 @@ namespace BookMyShow.Controllers
         [Route("reviews/{movieId:guid}")]
         public IActionResult GetReviewsByMovieId(Guid movieId)
         {
-            return reviewsController.GetReviewsByMovieId(movieId);
+           Task<List<ReviewResponse>?> review = _movieRepository.GetReviewsByMovieIdAsync(movieId);
+           if(review is null)
+            {
+                return NotFound();
+            }
+           return Ok(review);
         }
 
         [HttpDelete]
         [Route("deleteReview/{id:guid}")]
         public IActionResult DeleteReview(Guid id)
         {
-            return reviewsController.DeleteReview(id);
+            Task<string?> result = _movieRepository.DeleteReviewAsync(id);
+            return result is null? NotFound() : Ok(result);
         }
     }
 }

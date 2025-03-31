@@ -1,7 +1,7 @@
 using BookMyShow.Controllers;
 using BookMyShow.Data;
-using BookMyShow.Interfaces;
-using BookMyShow.Services;
+using BookMyShow.Repository.Implementations;
+using BookMyShow.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -13,10 +13,13 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ITheatreOwnersController, TheatreOwnersController>();
-builder.Services.AddScoped<IMoviesController, MoviesController>();
-builder.Services.AddScoped<IReviewsController, ReviewsController>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<ITheatreRepository, TheatreRepository>();
+builder.Services.AddScoped<ITheatreManagementRepository, TheatreManagementRepository>();
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<BookMyShowDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

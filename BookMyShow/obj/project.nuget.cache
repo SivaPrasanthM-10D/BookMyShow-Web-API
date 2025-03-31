@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "bdkrQhJRif8=",
+  "dgSpecHash": "yn0roEFQ/oo=",
   "success": true,
-  "projectFilePath": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\MovieManagement\\BookMyShow.csproj",
+  "projectFilePath": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\BookMyShow.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\10decoders\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\10decoders\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
