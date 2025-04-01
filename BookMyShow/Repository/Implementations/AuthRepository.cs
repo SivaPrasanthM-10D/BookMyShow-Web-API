@@ -1,6 +1,7 @@
-﻿using BookMyShow.Data.Entities;
-using BookMyShow.Data;
-using BookMyShow.Models;
+﻿using BookMyShow.Data;
+using BookMyShow.Exceptions;
+using BookMyShow.Models.CommonDTOs;
+using BookMyShow.Models.UserDTOs;
 using BookMyShow.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,56 +16,21 @@ namespace BookMyShow.Repository.Implementations
             this.dbContext = dbContext;
         }
 
-        public async Task<ServiceResult> RegisterAsync(RegisterDto registerDto)
-        {
-            try
-            {
-                if (await dbContext.Users.AnyAsync(u => u.Email == registerDto.Email))
-                {
-                    return new ServiceResult { Success = false, Message = "Email already exists" };
-                }
-
-                var user = new User
-                {
-                    UserName = registerDto.UserName,
-                    Email = registerDto.Email,
-                    Password = registerDto.Password,
-                    Role = "Customer" // Default role
-                };
-
-                await dbContext.Users.AddAsync(user);
-                await dbContext.SaveChangesAsync();
-
-                return new ServiceResult { Success = true, Message = "User registered successfully" };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResult { Success = false, Message = $"An error occurred: {ex.Message}" };
-            }
-        }
-
+        /// <summary>
+        /// Authenticates a user based on the provided login credentials.
+        /// </summary>
+        /// <param name="loginDto">The login credentials.</param>
+        /// <returns>A ServiceResult containing the authentication result and user information.</returns>
+        /// <exception cref="UnauthorizedException">Thrown when the email or password is invalid.</exception>
         public async Task<ServiceResult> LoginAsync(LoginDto loginDto)
         {
-            try
+            var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == loginDto.Email);
+            if (user == null || !VerifyPassword(loginDto.Password, user.Password))
             {
-                var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == loginDto.Email);
-                if (user == null || !VerifyPassword(loginDto.Password, user.Password))
-                {
-                    return new ServiceResult { Success = false, Message = "Invalid email or password" };
-                }
-
-                // Authentication successful
-                return new ServiceResult { Success = true, Message = "Login successful" };
+                throw new UnauthorizedException("Invalid email or password");
             }
-            catch (Exception ex)
-            {
-                return new ServiceResult { Success = false, Message = $"An error occurred: {ex.Message}" };
-            }
-        }
 
-        public Task<ServiceResult> LogoutAsync()
-        {
-            return Task.FromResult(new ServiceResult { Success = true, Message = "Logout successful" });
+            return new ServiceResult { Success = true, Message = "Login successful", User = user };
         }
 
         private bool VerifyPassword(string password, string storedPassword)

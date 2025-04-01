@@ -1,46 +1,10 @@
 {
   "openapi": "3.0.4",
   "info": {
-    "title": "BookMyShow",
-    "version": "1.0"
+    "title": "BookMyShow API",
+    "version": "v1"
   },
   "paths": {
-    "/api/auth/register": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterDto"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/auth/login": {
       "post": {
         "tags": [
@@ -70,18 +34,6 @@
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/auth/logout": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -303,52 +255,6 @@
         }
       }
     },
-    "/api/Movies/reviews/{movieId}": {
-      "get": {
-        "tags": [
-          "Movies"
-        ],
-        "parameters": [
-          {
-            "name": "movieId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Movies/deleteReview/{id}": {
-      "delete": {
-        "tags": [
-          "Movies"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Reviews/addReview": {
       "post": {
         "tags": [
@@ -482,6 +388,29 @@
       "get": {
         "tags": [
           "TheatreManagement"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TheatreManagement/deleteTheatre/{theatreid}": {
+      "delete": {
+        "tags": [
+          "TheatreManagement"
+        ],
+        "parameters": [
+          {
+            "name": "theatreid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -771,7 +700,7 @@
         }
       }
     },
-    "/api/Theatres": {
+    "/api/Theatres/TheatreOwners": {
       "get": {
         "tags": [
           "Theatres"
@@ -844,6 +773,27 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Theatres"
+        ],
+        "parameters": [
+          {
+            "name": "ownerid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -933,7 +883,7 @@
         }
       }
     },
-    "/api/Tickets/ticketDetails/{ticketId}": {
+    "/api/Tickets/{ticketId}": {
       "get": {
         "tags": [
           "Tickets"
@@ -991,7 +941,7 @@
         }
       }
     },
-    "/api/User/allUsers": {
+    "/api/User": {
       "get": {
         "tags": [
           "User"
@@ -1001,9 +951,7 @@
             "description": "OK"
           }
         }
-      }
-    },
-    "/api/User/addUser": {
+      },
       "post": {
         "tags": [
           "User"
@@ -1039,7 +987,7 @@
         }
       }
     },
-    "/api/User/deleteUser/{userid}": {
+    "/api/User/{userid}": {
       "delete": {
         "tags": [
           "User"
@@ -1218,24 +1166,26 @@
         "type": "object",
         "properties": {
           "userName": {
-            "type": "string",
-            "nullable": true
-          },
-          "password": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "email": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "format": "email"
           },
           "phoneNumber": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "format": "tel"
+          },
+          "password": {
+            "minLength": 1,
+            "type": "string"
           },
           "role": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1320,29 +1270,6 @@
         ],
         "type": "integer",
         "format": "int32"
-      },
-      "RegisterDto": {
-        "required": [
-          "email",
-          "password",
-          "userName"
-        ],
-        "type": "object",
-        "properties": {
-          "userName": {
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "password": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
       },
       "UpdateMovieDto": {
         "required": [
@@ -1441,6 +1368,19 @@
         },
         "additionalProperties": false
       }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Please enter JWT with Bearer into field",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
 }

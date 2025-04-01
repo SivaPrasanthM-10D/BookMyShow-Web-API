@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
 using BookMyShow.Data;
 using BookMyShow.Data.Entities;
-using BookMyShow.Models;
+using BookMyShow.Exceptions;
+using BookMyShow.Models.TheatreDTOs;
 using BookMyShow.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,10 @@ namespace BookMyShow.Repository.Implementations
             this.dbContext = dbContext;
         }
 
+        /// <summary>
+        /// Retrieves all theatres from the database.
+        /// </summary>
+        /// <returns>A list of theatres.</returns>
         public async Task<List<TheatreResponseDto>> GetAllTheatresAsync()
         {
             List<TheatreResponseDto> theatres = await dbContext.Theatres
@@ -35,6 +40,34 @@ namespace BookMyShow.Repository.Implementations
             return theatres;
         }
 
+        /// <summary>
+        /// Deletes a theatre by the theatre's ID.
+        /// </summary>
+        /// <param name="theatreid">The ID of the theatre.</param>
+        /// <returns>A message indicating the result of the deletion.</returns>
+        /// <exception cref="TheatreOwnerNotFoundException">Thrown when the theatre owner is not found.</exception>
+        /// <exception cref="TheatreNotFoundException">Thrown when the theatre is not found.</exception>
+        public async Task<string?> DeleteTheatreAsync(Guid theatreid)
+        {
+            Theatre? theatre = await dbContext.Theatres.FindAsync(theatreid);
+
+
+            if (theatre == null)
+            {
+                throw new TheatreNotFoundException("Theatre not found.");
+            }
+
+            dbContext.Theatres.Remove(theatre);
+            await dbContext.SaveChangesAsync();
+
+            return "Theatre deleted successfully";
+        }
+
+        /// <summary>
+        /// Retrieves all screens for a specific theatre.
+        /// </summary>
+        /// <param name="theatreid">The ID of the theatre to retrieve screens for.</param>
+        /// <returns>A list of screens for the specified theatre.</returns>
         public async Task<List<ScreenResponseDto>> GetAllScreensAsync(Guid theatreid)
         {
             List<ScreenResponseDto> screens = await dbContext.Screens
@@ -54,6 +87,11 @@ namespace BookMyShow.Repository.Implementations
             return screens;
         }
 
+        /// <summary>
+        /// Retrieves all shows for a specific screen.
+        /// </summary>
+        /// <param name="screenid">The ID of the screen to retrieve shows for.</param>
+        /// <returns>A list of shows for the specified screen.</returns>
         public async Task<List<ShowResponseDto>> GetAllShowsAsync(Guid screenid)
         {
             List<ShowResponseDto> shows = await dbContext.Shows
@@ -78,6 +116,12 @@ namespace BookMyShow.Repository.Implementations
             return shows;
         }
 
+        /// <summary>
+        /// Adds a new screen to a theatre.
+        /// </summary>
+        /// <param name="addScreenDto">The screen details to add.</param>
+        /// <returns>The added screen.</returns>
+        /// <exception cref="TheatreNotFoundException">Thrown when the theatre is not found.</exception>
         public async Task<ScreenResponseDto?> AddScreenAsync(AddScreenDto addScreenDto)
         {
             Theatre? theatre = await dbContext.Theatres
@@ -86,7 +130,7 @@ namespace BookMyShow.Repository.Implementations
                 .FirstOrDefaultAsync(t => t.TheatreId == addScreenDto.TheatreId);
             if (theatre == null)
             {
-                return null;
+                throw new TheatreNotFoundException("Theatre not found.");
             }
 
             var screen = new Screen
@@ -101,7 +145,8 @@ namespace BookMyShow.Repository.Implementations
             screen = await dbContext.Screens
                 .Include(s => s.Theatre)
                 .Include(s => s.Shows)
-                .FirstOrDefaultAsync(s => s.ScreenId == screen.ScreenId)!;
+                .FirstOrDefaultAsync(s => s.ScreenId == screen.ScreenId)
+                ?? throw new ScreenNotFoundException("Screen not found.");
 
             ScreenResponseDto response = new()
             {
@@ -114,12 +159,18 @@ namespace BookMyShow.Repository.Implementations
             return response;
         }
 
+        /// <summary>
+        /// Deletes a screen from the database.
+        /// </summary>
+        /// <param name="screenId">The ID of the screen to delete.</param>
+        /// <returns>A message indicating the result of the deletion.</returns>
+        /// <exception cref="ScreenNotFoundException">Thrown when the screen is not found.</exception>
         public async Task<string?> DeleteScreenAsync(Guid screenId)
         {
             var screen = await dbContext.Screens.FindAsync(screenId);
             if (screen == null)
             {
-                return null;
+                throw new ScreenNotFoundException("Screen not found.");
             }
 
             dbContext.Screens.Remove(screen);
@@ -127,12 +178,19 @@ namespace BookMyShow.Repository.Implementations
             return "Screen deleted successfully";
         }
 
+        /// <summary>
+        /// Updates an existing screen in the database.
+        /// </summary>
+        /// <param name="screenId">The ID of the screen to update.</param>
+        /// <param name="updateScreenDto">The updated screen details.</param>
+        /// <returns>The updated screen.</returns>
+        /// <exception cref="ScreenNotFoundException">Thrown when the screen is not found.</exception>
         public async Task<ScreenResponseDto?> UpdateScreenAsync(Guid screenId, UpdateScreenDto updateScreenDto)
         {
             var screen = await dbContext.Screens.FindAsync(screenId);
             if (screen == null)
             {
-                return null;
+                throw new ScreenNotFoundException("Screen not found.");
             }
 
             screen.ScreenNumber = updateScreenDto.ScreenNumber;
@@ -141,7 +199,8 @@ namespace BookMyShow.Repository.Implementations
             screen = await dbContext.Screens
                 .Include(s => s.Theatre)
                 .Include(s => s.Shows)
-                .FirstOrDefaultAsync(s => s.ScreenId == screen.ScreenId)!;
+                .FirstOrDefaultAsync(s => s.ScreenId == screen.ScreenId)
+                ?? throw new ScreenNotFoundException("Screen not found.");
 
             ScreenResponseDto response = new()
             {
@@ -154,6 +213,12 @@ namespace BookMyShow.Repository.Implementations
             return response;
         }
 
+        /// <summary>
+        /// Adds a new show to a screen.
+        /// </summary>
+        /// <param name="addShowDto">The show details to add.</param>
+        /// <returns>The added show.</returns>
+        /// <exception cref="ScreenNotFoundException">Thrown when the screen is not found.</exception>
         public async Task<ShowResponseDto?> AddShowAsync(AddShowDto addShowDto)
         {
             var screen = await dbContext.Screens
@@ -162,7 +227,7 @@ namespace BookMyShow.Repository.Implementations
 
             if (screen == null)
             {
-                return null;
+                throw new ScreenNotFoundException("Screen not found.");
             }
 
             List<int> AvailableSeats = new List<int>();
@@ -196,12 +261,18 @@ namespace BookMyShow.Repository.Implementations
             };
         }
 
+        /// <summary>
+        /// Deletes a show from the database.
+        /// </summary>
+        /// <param name="showId">The ID of the show to delete.</param>
+        /// <returns>A message indicating the result of the deletion.</returns>
+        /// <exception cref="ShowNotFoundException">Thrown when the show is not found.</exception>
         public async Task<string?> DeleteShowAsync(Guid showId)
         {
             var show = await dbContext.Shows.FindAsync(showId);
             if (show == null)
             {
-                return null;
+                throw new ShowNotFoundException("Show not found.");
             }
 
             dbContext.Shows.Remove(show);
@@ -209,12 +280,19 @@ namespace BookMyShow.Repository.Implementations
             return "Show deleted successfully.";
         }
 
+        /// <summary>
+        /// Updates an existing show in the database.
+        /// </summary>
+        /// <param name="showId">The ID of the show to update.</param>
+        /// <param name="updateShowDto">The updated show details.</param>
+        /// <returns>The updated show.</returns>
+        /// <exception cref="ShowNotFoundException">Thrown when the show is not found.</exception>
         public async Task<ShowResponseDto?> UpdateShowAsync(Guid showId, UpdateShowDto updateShowDto)
         {
             var show = await dbContext.Shows.FindAsync(showId);
             if (show == null)
             {
-                return null;
+                throw new ShowNotFoundException("Show not found.");
             }
 
             show.MovieId = updateShowDto.MovieId;
@@ -227,7 +305,8 @@ namespace BookMyShow.Repository.Implementations
             Screen screen = await dbContext.Screens
                 .Include(s => s.Theatre)
                 .Include(s => s.Shows)
-                .FirstOrDefaultAsync(s => s.ScreenId == show.ScreenId)!;
+                .FirstOrDefaultAsync(s => s.ScreenId == show.ScreenId)
+                ?? throw new ScreenNotFoundException("Screen not found.");
             return new ShowResponseDto
             {
                 ShowId = show.ShowId,
@@ -243,12 +322,18 @@ namespace BookMyShow.Repository.Implementations
             };
         }
 
+        /// <summary>
+        /// Removes a theatre from a theatre owner.
+        /// </summary>
+        /// <param name="ownerId">The ID of the theatre owner.</param>
+        /// <returns>A message indicating the result of the removal.</returns>
+        /// <exception cref="TheatreNotFoundException">Thrown when the theatre owner is not found.</exception>
         public async Task<string?> RemoveTheatreofTheatreOwnerAsync(Guid ownerId)
         {
             var theatreOwner = await dbContext.TheatreOwners.FindAsync(ownerId);
             if (theatreOwner is null)
             {
-                return null;
+                throw new TheatreNotFoundException("Theatre Owner not found.");
             }
             var theatreids = dbContext.Theatres.Where(th => th.TheatreOwnerId == ownerId);
             foreach (var theatre in theatreids)

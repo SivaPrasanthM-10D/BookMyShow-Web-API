@@ -1,6 +1,8 @@
 ﻿using BookMyShow.Data.Entities;
-using BookMyShow.Models;
+using BookMyShow.Exceptions;
+using BookMyShow.Models.UserDTOs;
 using BookMyShow.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookMyShow.Controllers
@@ -16,36 +18,68 @@ namespace BookMyShow.Controllers
             _userRepository = userRepository;
         }
 
+        /// <summary>
+        /// Retrieves all users.
+        /// </summary>
+        /// <returns>A list of users.</returns>
         [HttpGet]
-        [Route("allUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
-            List<User> users = await _userRepository.GetAllUsersAsync();
-            return Ok(users);
+            try
+            {
+                List<User> users = await _userRepository.GetAllUsersAsync();
+                if (!users.Any())
+                {
+                    throw new NotFoundException("No users found.");
+                }
+                return Ok(users);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
+        /// <summary>
+        /// Adds a new user.
+        /// </summary>
+        /// <param name="addUserDto">The user details to add.</param>
+        /// <returns>The added user.</returns>
+        /// <exception cref="BadRequestException">Thrown when the user data is invalid.</exception>
         [HttpPost]
-        [Route("addUser")]
         public async Task<IActionResult> AddUser(AddUserDto addUserDto)
         {
-            User? user = await _userRepository.AddUsersAsync(addUserDto);
-            if (user == null)
+            try
             {
-                return BadRequest("Failed to add user");
+                User? user = await _userRepository.AddUsersAsync(addUserDto);
+                return Ok(user);
             }
-            return Ok(user);
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
+        /// <summary>
+        /// Deletes a user.
+        /// </summary>
+        /// <param name="userid">The ID of the user to delete.</param>
+        /// <returns>A message indicating the result of the deletion.</returns>
+        /// <exception cref="NotFoundException">Thrown when the user is not found.</exception>
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
-        [Route("deleteUser/{userid:guid}")]
+        [Route("{userid:guid}")]
         public async Task<IActionResult> DeleteUser(Guid userid)
         {
-            string? result = await _userRepository.DeleteUserAsync(userid);
-            if (result == null)
+            try
             {
-                return NotFound("User not found");
+                string? result = await _userRepository.DeleteUserAsync(userid);
+                return Ok(result);
             }
-            return Ok(result);
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

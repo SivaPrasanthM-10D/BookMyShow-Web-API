@@ -1,6 +1,7 @@
 ﻿using BookMyShow.Data;
 using BookMyShow.Data.Entities;
-using BookMyShow.Models;
+using BookMyShow.Exceptions;
+using BookMyShow.Models.ReviewDTOs;
 using BookMyShow.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,124 +16,128 @@ namespace BookMyShow.Repository.Implementations
             this.dbContext = dbContext;
         }
 
+        /// <summary>
+        /// Adds a new review to the database.
+        /// </summary>
+        /// <param name="addReviewDto">The review details to add.</param>
+        /// <returns>The added review.</returns>
+        /// <exception cref="InvalidReviewDataException">Thrown when the review data is invalid.</exception>
+        /// <exception cref="ReviewNotFoundException">Thrown when the review is not found after adding.</exception>
         public async Task<ReviewResponse?> AddReviewAsync(AddReviewDto addReviewDto)
         {
-            try
+            if (addReviewDto is null)
             {
-                if (addReviewDto is null)
-                {
-                    return null;
-                }
-                MovieReview review = new()
-                {
-                    UserId = addReviewDto.UserId,
-                    MovieId = addReviewDto.MovieId,
-                    Rating = addReviewDto.Rating,
-                    Review = addReviewDto.Review
-                };
-
-                await dbContext.MovieReviews.AddAsync(review);
-                await dbContext.SaveChangesAsync();
-
-                review = await dbContext.MovieReviews
-                    .Include(r => r.User)
-                    .Include(r => r.Movie)
-                    .FirstOrDefaultAsync(r => r.ReviewId == review.ReviewId)!;
-
-                return new ReviewResponse
-                {
-                    ReviewId = review.ReviewId,
-                    UserId = review.UserId,
-                    MovieId = review.MovieId,
-                    Rating = review.Rating,
-                    Review = review.Review
-                };
+                throw new InvalidReviewDataException("Invalid review data.");
             }
-            catch (Exception ex)
+
+            MovieReview review = new()
             {
-                return null;
-            }
+                UserId = addReviewDto.UserId,
+                MovieId = addReviewDto.MovieId,
+                Rating = addReviewDto.Rating,
+                Review = addReviewDto.Review
+            };
+
+            await dbContext.MovieReviews.AddAsync(review);
+            await dbContext.SaveChangesAsync();
+
+            review = await dbContext.MovieReviews
+                .Include(r => r.User)
+                .Include(r => r.Movie)
+                .FirstOrDefaultAsync(r => r.ReviewId == review.ReviewId)
+                ?? throw new ReviewNotFoundException("Review not found.");
+
+            return new ReviewResponse
+            {
+                ReviewId = review.ReviewId,
+                UserId = review.UserId,
+                MovieId = review.MovieId,
+                Rating = review.Rating,
+                Review = review.Review
+            };
         }
 
+        /// <summary>
+        /// Updates an existing review in the database.
+        /// </summary>
+        /// <param name="id">The ID of the review to update.</param>
+        /// <param name="updateReviewDto">The updated review details.</param>
+        /// <returns>The updated review.</returns>
+        /// <exception cref="ReviewNotFoundException">Thrown when the review is not found.</exception>
         public async Task<ReviewResponse?> UpdateReviewAsync(Guid id, UpdateReviewDto updateReviewDto)
         {
-            try
+            MovieReview? review = await dbContext.MovieReviews.FindAsync(id);
+            if (review is null)
             {
-                MovieReview? review = await dbContext.MovieReviews.FindAsync(id);
-                if (review is null)
-                {
-                    return null;
-                }
-                review.Rating = updateReviewDto.Rating;
-                review.Review = updateReviewDto.Review;
-                await dbContext.SaveChangesAsync();
-                return new ReviewResponse
+                throw new ReviewNotFoundException("Review not found.");
+            }
+
+            review.Rating = updateReviewDto.Rating;
+            review.Review = updateReviewDto.Review;
+            await dbContext.SaveChangesAsync();
+
+            return new ReviewResponse
+            {
+                ReviewId = review.ReviewId,
+                UserId = review.UserId,
+                MovieId = review.MovieId,
+                Rating = review.Rating,
+                Review = review.Review
+            };
+        }
+
+        /// <summary>
+        /// Retrieves reviews for a specific movie.
+        /// </summary>
+        /// <param name="movieId">The ID of the movie to retrieve reviews for.</param>
+        /// <returns>A list of reviews for the specified movie.</returns>
+        /// <exception cref="MovieNotFoundException">Thrown when the movie or reviews are not found.</exception>
+        public async Task<List<ReviewResponse>?> GetReviewsByMovieIdAsync(Guid movieId)
+        {
+            if (await dbContext.Movies.FindAsync(movieId) is null)
+            {
+                throw new MovieNotFoundException("Movie not found.");
+            }
+
+            List<ReviewResponse> reviews = await dbContext.MovieReviews
+                .Include(r => r.User)
+                .Include(r => r.Movie)
+                .Where(r => r.MovieId == movieId)
+                .Select(review => new ReviewResponse
                 {
                     ReviewId = review.ReviewId,
                     UserId = review.UserId,
                     MovieId = review.MovieId,
                     Rating = review.Rating,
                     Review = review.Review
-                };
-            }
-            catch (Exception ex)
+                })
+                .ToListAsync();
+
+            if (reviews is null || !reviews.Any())
             {
-                return null;
+                throw new MovieNotFoundException();
             }
+
+            return reviews;
         }
 
-        public async Task<List<ReviewResponse>?> GetReviewsByMovieIdAsync(Guid movieId)
-        {
-            try
-            {
-                if (await dbContext.Movies.FindAsync(movieId) is null)
-                {
-                    return null;
-                }
-                List<ReviewResponse> reviews = await dbContext.MovieReviews
-                    .Include(r => r.User)
-                    .Include(r => r.Movie)
-                    .Where(r => r.MovieId == movieId)
-                    .Select(review => new ReviewResponse
-                    {
-                        ReviewId = review.ReviewId,
-                        UserId = review.UserId,
-                        MovieId = review.MovieId,
-                        Rating = review.Rating,
-                        Review = review.Review
-                    })
-                    .ToListAsync();
-                if (reviews is null)
-                {
-                    return null;
-                }
-                return reviews;
-            }
-            catch (Exception ex)
-            {
-                // Log the exception (not implemented here)
-                return null;
-            }
-        }
-
+        /// <summary>
+        /// Deletes a review from the database.
+        /// </summary>
+        /// <param name="reviewid">The ID of the review to delete.</param>
+        /// <returns>A message indicating the result of the deletion.</returns>
+        /// <exception cref="ReviewNotFoundException">Thrown when the review is not found.</exception>
         public async Task<string?> DeleteReviewAsync(Guid reviewid)
         {
-            try
+            MovieReview? review = await dbContext.MovieReviews.FindAsync(reviewid);
+            if (review is null)
             {
-                MovieReview? review = await dbContext.MovieReviews.FindAsync(reviewid);
-                if (review is null)
-                {
-                    return null;
-                }
-                dbContext.MovieReviews.Remove(review);
-                await dbContext.SaveChangesAsync();
-                return "Review deleted successfully";
+                throw new ReviewNotFoundException("Review not found.");
             }
-            catch (Exception ex)
-            {
-                // Log the exception (not implemented here)
-                return null;
-            }
+
+            dbContext.MovieReviews.Remove(review);
+            await dbContext.SaveChangesAsync();
+            return "Review deleted successfully";
         }
     }
 }

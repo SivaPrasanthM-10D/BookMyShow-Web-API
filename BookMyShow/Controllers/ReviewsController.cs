@@ -1,5 +1,7 @@
-﻿using BookMyShow.Models;
+﻿using BookMyShow.Exceptions;
+using BookMyShow.Models.ReviewDTOs;
 using BookMyShow.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookMyShow.Controllers
@@ -15,52 +17,91 @@ namespace BookMyShow.Controllers
             _reviewRepository = reviewRepository;
         }
 
+        /// <summary>
+        /// Adds a new review.
+        /// </summary>
+        /// <param name="addReviewDto">The review details to add.</param>
+        /// <returns>The added review.</returns>
+        /// <exception cref="BadRequestException">Thrown when the review data is invalid.</exception>
+        [Authorize(Roles = "Customer")]
         [HttpPost]
-        [Route("addReview")]
         public async Task<IActionResult> AddReview(AddReviewDto addReviewDto)
         {
-            ReviewResponse? result = await _reviewRepository.AddReviewAsync(addReviewDto);
-            if (result == null)
+            try
             {
-                return BadRequest();
+                ReviewResponse? result = await _reviewRepository.AddReviewAsync(addReviewDto);
+                return Ok(result);
             }
-            return Ok(result);
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
+        /// <summary>
+        /// Updates an existing review.
+        /// </summary>
+        /// <param name="id">The ID of the review to update.</param>
+        /// <param name="updateReviewDto">The updated review details.</param>
+        /// <returns>The updated review.</returns>
+        /// <exception cref="NotFoundException">Thrown when the review is not found.</exception>
+        [Authorize(Roles = "Customer")]
         [HttpPut]
-        [Route("updateReview/{id:guid}")]
+        [Route("{id:guid}")]
         public async Task<IActionResult> UpdateReview(Guid id, UpdateReviewDto updateReviewDto)
         {
-            ReviewResponse? result = await _reviewRepository.UpdateReviewAsync(id, updateReviewDto);
-            if (result == null)
+            try
             {
-                return NotFound("Review not found");
+                ReviewResponse? result = await _reviewRepository.UpdateReviewAsync(id, updateReviewDto);
+                return Ok(result);
             }
-            return Ok(result);
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
+        /// <summary>
+        /// Retrieves reviews for a specific movie.
+        /// </summary>
+        /// <param name="movieId">The ID of the movie to retrieve reviews for.</param>
+        /// <returns>A list of reviews for the specified movie.</returns>
+        /// <exception cref="NotFoundException">Thrown when the movie or reviews are not found.</exception>
         [HttpGet]
-        [Route("reviews/{movieId:guid}")]
+        [Route("{movieId:guid}")]
         public async Task<IActionResult> GetReviewsByMovieId(Guid movieId)
         {
-            List<ReviewResponse>? reviews = await _reviewRepository.GetReviewsByMovieIdAsync(movieId);
-            if (reviews == null)
+            try
             {
-                return NotFound();
+                List<ReviewResponse>? reviews = await _reviewRepository.GetReviewsByMovieIdAsync(movieId);
+                return Ok(reviews);
             }
-            return Ok(reviews);
+            catch (NotFoundException)
+            {
+                return NotFound("No reviews found for the specified movie.");
+            }
         }
 
+        /// <summary>
+        /// Deletes a review.
+        /// </summary>
+        /// <param name="reviewid">The ID of the review to delete.</param>
+        /// <returns>A message indicating the result of the deletion.</returns>
+        /// <exception cref="NotFoundException">Thrown when the review is not found.</exception>
+        [Authorize(Roles = "Customer,Admin")]
         [HttpDelete]
-        [Route("deleteReview/{reviewid:guid}")]
+        [Route("{reviewid:guid}")]
         public async Task<IActionResult> DeleteReview(Guid reviewid)
         {
-            string? review = await _reviewRepository.DeleteReviewAsync(reviewid);
-            if (review == null)
+            try
             {
-                return NotFound();
+                string? review = await _reviewRepository.DeleteReviewAsync(reviewid);
+                return Ok(review);
             }
-            return Ok(review);
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

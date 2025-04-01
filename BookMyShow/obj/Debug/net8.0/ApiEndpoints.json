@@ -9,33 +9,7 @@
     "Parameters": [
       {
         "Name": "loginDto",
-        "Type": "BookMyShow.Models.LoginDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BookMyShow.Controllers.AuthController",
-    "Method": "Logout",
-    "RelativePath": "api/auth/logout",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BookMyShow.Controllers.AuthController",
-    "Method": "Register",
-    "RelativePath": "api/auth/register",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "registerDto",
-        "Type": "BookMyShow.Models.RegisterDto",
+        "Type": "BookMyShow.Models.UserDTOs.LoginDto",
         "IsRequired": true
       }
     ],
@@ -61,7 +35,7 @@
     "Parameters": [
       {
         "Name": "addmoviedto",
-        "Type": "BookMyShow.Models.AddMovieDto",
+        "Type": "BookMyShow.Models.MovieDTOs.AddMovieDto",
         "IsRequired": true
       }
     ],
@@ -98,7 +72,7 @@
       },
       {
         "Name": "updatemoviedto",
-        "Type": "BookMyShow.Models.UpdateMovieDto",
+        "Type": "BookMyShow.Models.TheatreDTOs.UpdateMovieDto",
         "IsRequired": true
       }
     ],
@@ -158,38 +132,6 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookMyShow.Controllers.MoviesController",
-    "Method": "DeleteReview",
-    "RelativePath": "api/Movies/deleteReview/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BookMyShow.Controllers.MoviesController",
-    "Method": "GetReviewsByMovieId",
-    "RelativePath": "api/Movies/reviews/{movieId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "movieId",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "BookMyShow.Controllers.ReviewsController",
     "Method": "AddReview",
     "RelativePath": "api/Reviews/addReview",
@@ -199,7 +141,7 @@
     "Parameters": [
       {
         "Name": "addReviewDto",
-        "Type": "BookMyShow.Models.AddReviewDto",
+        "Type": "BookMyShow.Models.ReviewDTOs.AddReviewDto",
         "IsRequired": true
       }
     ],
@@ -252,7 +194,7 @@
       },
       {
         "Name": "updateReviewDto",
-        "Type": "BookMyShow.Models.UpdateReviewDto",
+        "Type": "BookMyShow.Models.ReviewDTOs.UpdateReviewDto",
         "IsRequired": true
       }
     ],
@@ -284,7 +226,7 @@
     "Parameters": [
       {
         "Name": "addScreenDto",
-        "Type": "BookMyShow.Models.AddScreenDto",
+        "Type": "BookMyShow.Models.TheatreDTOs.AddScreenDto",
         "IsRequired": true
       }
     ],
@@ -300,7 +242,7 @@
     "Parameters": [
       {
         "Name": "addShowDto",
-        "Type": "BookMyShow.Models.AddShowDto",
+        "Type": "BookMyShow.Models.TheatreDTOs.AddShowDto",
         "IsRequired": true
       }
     ],
@@ -332,6 +274,22 @@
     "Parameters": [
       {
         "Name": "showId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookMyShow.Controllers.TheatreManagementController",
+    "Method": "DeleteTheatreAsync",
+    "RelativePath": "api/TheatreManagement/deleteTheatre/{theatreid}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "theatreid",
         "Type": "System.Guid",
         "IsRequired": true
       }
@@ -395,7 +353,7 @@
       },
       {
         "Name": "updateScreenDto",
-        "Type": "BookMyShow.Models.UpdateScreenDto",
+        "Type": "BookMyShow.Models.TheatreDTOs.UpdateScreenDto",
         "IsRequired": true
       }
     ],
@@ -416,20 +374,10 @@
       },
       {
         "Name": "updateShowDto",
-        "Type": "BookMyShow.Models.UpdateShowDto",
+        "Type": "BookMyShow.Models.TheatreDTOs.UpdateShowDto",
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BookMyShow.Controllers.TheatresController",
-    "Method": "GetTheatreOwners",
-    "RelativePath": "api/Theatres",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -463,7 +411,49 @@
       },
       {
         "Name": "addtheatredto",
-        "Type": "BookMyShow.Models.AddTheatreDto",
+        "Type": "BookMyShow.Models.TheatreDTOs.AddTheatreDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookMyShow.Controllers.TheatresController",
+    "Method": "DeleteTheatre",
+    "RelativePath": "api/Theatres/{ownerid}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ownerid",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookMyShow.Controllers.TheatresController",
+    "Method": "GetTheatreOwners",
+    "RelativePath": "api/Theatres/TheatreOwners",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookMyShow.Controllers.TicketsController",
+    "Method": "GetTicketDetails",
+    "RelativePath": "api/Tickets/{ticketId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ticketId",
+        "Type": "System.Guid",
         "IsRequired": true
       }
     ],
@@ -544,41 +534,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookMyShow.Controllers.TicketsController",
-    "Method": "GetTicketDetails",
-    "RelativePath": "api/Tickets/ticketDetails/{ticketId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "ticketId",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BookMyShow.Controllers.UserController",
-    "Method": "AddUser",
-    "RelativePath": "api/User/addUser",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "addUserDto",
-        "Type": "BookMyShow.Models.AddUserDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "BookMyShow.Controllers.UserController",
     "Method": "GetAllUsers",
-    "RelativePath": "api/User/allUsers",
+    "RelativePath": "api/User",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -587,8 +545,24 @@
   },
   {
     "ContainingType": "BookMyShow.Controllers.UserController",
+    "Method": "AddUser",
+    "RelativePath": "api/User",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "addUserDto",
+        "Type": "BookMyShow.Models.UserDTOs.AddUserDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookMyShow.Controllers.UserController",
     "Method": "DeleteUser",
-    "RelativePath": "api/User/deleteUser/{userid}",
+    "RelativePath": "api/User/{userid}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,

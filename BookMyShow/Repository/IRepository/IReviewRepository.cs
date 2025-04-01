@@ -1,4 +1,4 @@
-﻿using BookMyShow.Models;
+﻿using BookMyShow.Models.ReviewDTOs;
 
 namespace BookMyShow.Repository.IRepository
 {

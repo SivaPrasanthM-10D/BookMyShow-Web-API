@@ -1,5 +1,7 @@
 ﻿using BookMyShow.Data.Entities;
-using BookMyShow.Models;
+using BookMyShow.Models.MovieDTOs;
+using BookMyShow.Models.ReviewDTOs;
+using BookMyShow.Models.TheatreDTOs;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +16,5 @@ namespace BookMyShow.Repository.IRepository
         Task<Movie?> UpdateMovieAsync(Guid id, UpdateMovieDto updatemoviedto);
         Task<string?> DeleteMovieAsync(Guid id);
         Task<Movie?> EditMovieAsync(Guid id, JsonPatchDocument<Movie> patchmovie);
-        Task<List<ReviewResponse>?> GetReviewsByMovieIdAsync(Guid movieId);
-        Task<string?> DeleteReviewAsync(Guid id);
     }
 }

@@ -1,10 +1,12 @@
-﻿using BookMyShow.Models;
+﻿using BookMyShow.Models.TheatreDTOs;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookMyShow.Repository.IRepository
 {
     public interface ITheatreManagementRepository
     {
         Task<List<TheatreResponseDto>> GetAllTheatresAsync();
+        Task<string?> DeleteTheatreAsync(Guid theatreid);
         Task<List<ScreenResponseDto>> GetAllScreensAsync(Guid theatreid);
         Task<List<ShowResponseDto>> GetAllShowsAsync(Guid screenid);
         Task<ScreenResponseDto?> AddScreenAsync(AddScreenDto addScreenDto);

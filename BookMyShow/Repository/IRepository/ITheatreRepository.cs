@@ -1,6 +1,6 @@
 ﻿using BookMyShow.Data.Entities;
-using BookMyShow.Models;
-using static BookMyShow.Models.AddScreenResponseDto;
+using BookMyShow.Models.TheatreDTOs;
+using static BookMyShow.Models.TheatreDTOs.AddScreenResponseDto;
 
 namespace BookMyShow.Repository.IRepository
 {
@@ -9,5 +9,6 @@ namespace BookMyShow.Repository.IRepository
         Task<List<User>> GetTheatreOwnersAsync();
         Task<TheatreOwnerSummaryDto?> GetTheatreAsync(Guid ownerid);
         Task<TheatreDto?> AddTheatreToTheatreOwnerAsync(Guid ownerid, AddTheatreDto addtheatredto);
+        Task<string?> DeleteTheatreAsync(Guid ownerid);
     }
 }

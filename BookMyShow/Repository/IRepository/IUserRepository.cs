@@ -1,5 +1,5 @@
 ﻿using BookMyShow.Data.Entities;
-using BookMyShow.Models;
+using BookMyShow.Models.UserDTOs;
 
 namespace BookMyShow.Repository.IRepository
 {
