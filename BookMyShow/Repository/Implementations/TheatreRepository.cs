@@ -4,7 +4,6 @@ using BookMyShow.Exceptions;
 using BookMyShow.Models.TheatreDTOs;
 using BookMyShow.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
-using static BookMyShow.Models.TheatreDTOs.AddScreenResponseDto;
 
 namespace BookMyShow.Repository.Implementations
 {

@@ -4,6 +4,7 @@ using BookMyShow.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace BookMyShow.Controllers
 {
     [Route("api/[controller]")]
@@ -68,12 +69,12 @@ namespace BookMyShow.Controllers
         /// <returns>A list of reviews for the specified movie.</returns>
         /// <exception cref="NotFoundException">Thrown when the movie or reviews are not found.</exception>
         [HttpGet]
-        [Route("{movieId:guid}")]
-        public async Task<IActionResult> GetReviewsByMovieId(Guid movieId)
+        [Route("{movieName}")]
+        public async Task<IActionResult> GetReviewsByMovieName(string movieName)
         {
             try
             {
-                List<ReviewResponse>? reviews = await _reviewRepository.GetReviewsByMovieIdAsync(movieId);
+                List<ReviewResponse>? reviews = await _reviewRepository.GetReviewsByMovieNameAsync(movieName);
                 return Ok(reviews);
             }
             catch (NotFoundException)

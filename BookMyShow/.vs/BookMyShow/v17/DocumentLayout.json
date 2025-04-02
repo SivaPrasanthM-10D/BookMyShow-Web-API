@@ -1,28 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|c:\\users\\10decoders\\documents\\asp .net training\\bookmyshow\\repository\\implementations\\theatrerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|solutionrelative:repository\\implementations\\theatrerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|c:\\users\\10decoders\\documents\\asp .net training\\bookmyshow\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|c:\\users\\10decoders\\documents\\asp .net training\\bookmyshow\\controllers\\reviewscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|solutionrelative:controllers\\reviewscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|c:\\users\\10decoders\\documents\\asp .net training\\bookmyshow\\controllers\\ticketscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|solutionrelative:controllers\\ticketscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|c:\\users\\10decoders\\documents\\asp .net training\\bookmyshow\\repository\\implementations\\ticketrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|solutionrelative:repository\\implementations\\ticketrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -30,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 287,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -55,71 +34,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:293798257:0:{bf84ea66-d821-4dba-b1b1-2777d8574775}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "Controllers\\AuthController.cs",
-              "ViewState": "AgIAADMAAAAAAAAAAAAowEgAAABjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-01T11:16:46.308Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ReviewsController.cs",
-              "DocumentMoniker": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Controllers\\ReviewsController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ReviewsController.cs",
-              "ToolTip": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Controllers\\ReviewsController.cs",
-              "RelativeToolTip": "Controllers\\ReviewsController.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAgwBoAAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-01T11:02:59.715Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "TicketsController.cs",
-              "DocumentMoniker": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Controllers\\TicketsController.cs",
-              "RelativeDocumentMoniker": "Controllers\\TicketsController.cs",
-              "ToolTip": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Controllers\\TicketsController.cs",
-              "RelativeToolTip": "Controllers\\TicketsController.cs",
-              "ViewState": "AgIAAF8AAAAAAAAAAAAIwGIAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-01T10:45:44.253Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "TheatreRepository.cs",
-              "DocumentMoniker": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Repository\\Implementations\\TheatreRepository.cs",
-              "RelativeDocumentMoniker": "Repository\\Implementations\\TheatreRepository.cs",
-              "ToolTip": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Repository\\Implementations\\TheatreRepository.cs",
-              "RelativeToolTip": "Repository\\Implementations\\TheatreRepository.cs",
-              "ViewState": "AgIAAGoAAAAAAAAAAAAcwHwAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-01T10:45:28.443Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "TicketRepository.cs",
-              "DocumentMoniker": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Repository\\Implementations\\TicketRepository.cs",
-              "RelativeDocumentMoniker": "Repository\\Implementations\\TicketRepository.cs",
-              "ToolTip": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Repository\\Implementations\\TicketRepository.cs",
-              "RelativeToolTip": "Repository\\Implementations\\TicketRepository.cs",
-              "ViewState": "AgIAACQAAAAAAAAAAAAowDUAAAAxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-01T10:17:39.522Z",
-              "EditorCaption": ""
             }
           ]
         }

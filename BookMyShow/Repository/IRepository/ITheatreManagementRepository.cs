@@ -1,5 +1,4 @@
 ﻿using BookMyShow.Models.TheatreDTOs;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BookMyShow.Repository.IRepository
 {
@@ -9,6 +8,7 @@ namespace BookMyShow.Repository.IRepository
         Task<string?> DeleteTheatreAsync(Guid theatreid);
         Task<List<ScreenResponseDto>> GetAllScreensAsync(Guid theatreid);
         Task<List<ShowResponseDto>> GetAllShowsAsync(Guid screenid);
+        Task<List<ShowResponseDto>> GetAllShowsByMovieNameAsync(string movieName);
         Task<ScreenResponseDto?> AddScreenAsync(AddScreenDto addScreenDto);
         Task<string?> DeleteScreenAsync(Guid screenId);
         Task<ScreenResponseDto?> UpdateScreenAsync(Guid screenId, UpdateScreenDto updateScreenDto);

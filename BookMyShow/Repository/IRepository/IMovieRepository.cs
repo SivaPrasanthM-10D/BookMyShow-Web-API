@@ -1,9 +1,7 @@
 ﻿using BookMyShow.Data.Entities;
 using BookMyShow.Models.MovieDTOs;
-using BookMyShow.Models.ReviewDTOs;
 using BookMyShow.Models.TheatreDTOs;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BookMyShow.Repository.IRepository
 {

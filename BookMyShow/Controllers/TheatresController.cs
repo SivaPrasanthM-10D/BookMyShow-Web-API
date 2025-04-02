@@ -4,7 +4,6 @@ using BookMyShow.Models.TheatreDTOs;
 using BookMyShow.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static BookMyShow.Models.TheatreDTOs.AddScreenResponseDto;
 
 namespace BookMyShow.Controllers
 {

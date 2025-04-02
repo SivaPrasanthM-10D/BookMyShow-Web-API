@@ -1,5 +1,4 @@
-﻿using static BookMyShow.Models.TheatreDTOs.AddScreenResponseDto;
-
+﻿
 namespace BookMyShow.Models.TheatreDTOs
 {
     public class TheatreOwnerSummaryDto

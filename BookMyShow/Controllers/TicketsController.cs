@@ -114,7 +114,7 @@ namespace BookMyShow.Controllers
         /// Retrieves all booked tickets.
         /// </summary>
         /// <returns>A list of booked tickets.</returns>
-        [Authorize(Roles = "TheatreOwner,Customer")]
+        [Authorize(Roles = "TheatreOwner")]
         [HttpGet]
         [Route("bookedTickets")]
         public async Task<IActionResult> GetBookedTickets()

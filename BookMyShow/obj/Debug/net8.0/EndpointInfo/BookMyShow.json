@@ -255,7 +255,7 @@
         }
       }
     },
-    "/api/Reviews/addReview": {
+    "/api/Reviews": {
       "post": {
         "tags": [
           "Reviews"
@@ -291,7 +291,7 @@
         }
       }
     },
-    "/api/Reviews/updateReview/{id}": {
+    "/api/Reviews/{id}": {
       "put": {
         "tags": [
           "Reviews"
@@ -338,19 +338,18 @@
         }
       }
     },
-    "/api/Reviews/reviews/{movieId}": {
+    "/api/Reviews/{movieName}": {
       "get": {
         "tags": [
           "Reviews"
         ],
         "parameters": [
           {
-            "name": "movieId",
+            "name": "movieName",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],
@@ -361,7 +360,7 @@
         }
       }
     },
-    "/api/Reviews/deleteReview/{reviewid}": {
+    "/api/Reviews/{reviewid}": {
       "delete": {
         "tags": [
           "Reviews"
@@ -455,6 +454,28 @@
             "schema": {
               "type": "string",
               "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TheatreManagement/Shows/{movieName}": {
+      "get": {
+        "tags": [
+          "TheatreManagement"
+        ],
+        "parameters": [
+          {
+            "name": "movieName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],

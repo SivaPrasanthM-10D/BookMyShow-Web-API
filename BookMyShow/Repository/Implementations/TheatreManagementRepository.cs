@@ -117,6 +117,37 @@ namespace BookMyShow.Repository.Implementations
         }
 
         /// <summary>
+        /// Retrieves all shows by the movie name.
+        /// </summary>
+        /// <param name="movieName">The name of the movie to search for.</param>
+        /// <returns>A list of shows that match the specified movie name.</returns>
+        public async Task<List<ShowResponseDto>> GetAllShowsByMovieNameAsync(string movieName)
+        {
+            List<ShowResponseDto> shows = await dbContext.Shows
+                .Include(s => s.Movie)
+                .Include(s => s.Screen)
+                    .ThenInclude(sc => sc.Theatre)
+                .Where(s => s.Movie.Title.Contains(movieName))
+                .Select(s => new ShowResponseDto
+                {
+                    ShowId = s.ShowId,
+                    ScreenId = s.ScreenId,
+                    ScreenNumber = s.Screen.ScreenNumber,
+                    TheatreId = s.Screen.TheatreId,
+                    TheatreName = s.Screen.Theatre.TheatreName,
+                    MovieId = s.MovieId,
+                    ShowTime = DateTime.Today.Add(s.ShowTime).ToString("hh:mm tt"),
+                    ShowDate = s.ShowDate.ToString("dd/MM/yyyy"),
+                    AvailableSeats = s.AvailableSeats,
+                    TicketPrice = s.TicketPrice
+                })
+                .ToListAsync();
+
+            return shows;
+        }
+
+
+        /// <summary>
         /// Adds a new screen to a theatre.
         /// </summary>
         /// <param name="addScreenDto">The screen details to add.</param>

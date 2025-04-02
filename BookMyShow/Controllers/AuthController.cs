@@ -63,7 +63,7 @@ namespace BookMyShow.Controllers
                     };
                     var token = new JwtSecurityToken(
                         issuer: _configuration["Jwt:Issuer"],
-                        expires: DateTime.Now.AddMinutes(60),
+                        expires: DateTime.Now.AddMinutes(1),
                         claims: authClaims,
                         signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!)),
                         SecurityAlgorithms.HmacSha256

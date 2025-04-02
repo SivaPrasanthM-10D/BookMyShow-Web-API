@@ -134,7 +134,7 @@
   {
     "ContainingType": "BookMyShow.Controllers.ReviewsController",
     "Method": "AddReview",
-    "RelativePath": "api/Reviews/addReview",
+    "RelativePath": "api/Reviews",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -149,40 +149,8 @@
   },
   {
     "ContainingType": "BookMyShow.Controllers.ReviewsController",
-    "Method": "DeleteReview",
-    "RelativePath": "api/Reviews/deleteReview/{reviewid}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "reviewid",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BookMyShow.Controllers.ReviewsController",
-    "Method": "GetReviewsByMovieId",
-    "RelativePath": "api/Reviews/reviews/{movieId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "movieId",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BookMyShow.Controllers.ReviewsController",
     "Method": "UpdateReview",
-    "RelativePath": "api/Reviews/updateReview/{id}",
+    "RelativePath": "api/Reviews/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -195,6 +163,38 @@
       {
         "Name": "updateReviewDto",
         "Type": "BookMyShow.Models.ReviewDTOs.UpdateReviewDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookMyShow.Controllers.ReviewsController",
+    "Method": "GetReviewsByMovieName",
+    "RelativePath": "api/Reviews/{movieName}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "movieName",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookMyShow.Controllers.ReviewsController",
+    "Method": "DeleteReview",
+    "RelativePath": "api/Reviews/{reviewid}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "reviewid",
+        "Type": "System.Guid",
         "IsRequired": true
       }
     ],
@@ -307,6 +307,22 @@
       {
         "Name": "theatreid",
         "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookMyShow.Controllers.TheatreManagementController",
+    "Method": "GetAllShows",
+    "RelativePath": "api/TheatreManagement/Shows/{movieName}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "movieName",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],

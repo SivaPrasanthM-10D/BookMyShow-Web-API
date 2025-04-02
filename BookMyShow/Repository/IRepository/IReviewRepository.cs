@@ -6,7 +6,7 @@ namespace BookMyShow.Repository.IRepository
     {
         Task<ReviewResponse?> AddReviewAsync(AddReviewDto addReviewDto);
         Task<ReviewResponse?> UpdateReviewAsync(Guid id, UpdateReviewDto updateReviewDto);
-        Task<List<ReviewResponse>?> GetReviewsByMovieIdAsync(Guid movieId);
+        Task<List<ReviewResponse>?> GetReviewsByMovieNameAsync(string movieName);
         Task<string?> DeleteReviewAsync(Guid reviewid);
     }
 }

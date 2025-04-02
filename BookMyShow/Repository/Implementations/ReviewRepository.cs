@@ -51,7 +51,7 @@ namespace BookMyShow.Repository.Implementations
             {
                 ReviewId = review.ReviewId,
                 UserId = review.UserId,
-                MovieId = review.MovieId,
+                MovieTitle = review.Movie.Title,
                 Rating = review.Rating,
                 Review = review.Review
             };
@@ -80,7 +80,7 @@ namespace BookMyShow.Repository.Implementations
             {
                 ReviewId = review.ReviewId,
                 UserId = review.UserId,
-                MovieId = review.MovieId,
+                MovieTitle = review.Movie.Title,
                 Rating = review.Rating,
                 Review = review.Review
             };
@@ -92,9 +92,10 @@ namespace BookMyShow.Repository.Implementations
         /// <param name="movieId">The ID of the movie to retrieve reviews for.</param>
         /// <returns>A list of reviews for the specified movie.</returns>
         /// <exception cref="MovieNotFoundException">Thrown when the movie or reviews are not found.</exception>
-        public async Task<List<ReviewResponse>?> GetReviewsByMovieIdAsync(Guid movieId)
+        public async Task<List<ReviewResponse>?> GetReviewsByMovieNameAsync(string movieName)
         {
-            if (await dbContext.Movies.FindAsync(movieId) is null)
+            var movie = await dbContext.Movies.FirstOrDefaultAsync(m => m.Title == movieName);
+            if (movie is null)
             {
                 throw new MovieNotFoundException("Movie not found.");
             }
@@ -102,12 +103,12 @@ namespace BookMyShow.Repository.Implementations
             List<ReviewResponse> reviews = await dbContext.MovieReviews
                 .Include(r => r.User)
                 .Include(r => r.Movie)
-                .Where(r => r.MovieId == movieId)
+                .Where(r => r.Movie.Title == movieName)
                 .Select(review => new ReviewResponse
                 {
                     ReviewId = review.ReviewId,
                     UserId = review.UserId,
-                    MovieId = review.MovieId,
+                    MovieTitle = review.Movie.Title,
                     Rating = review.Rating,
                     Review = review.Review
                 })
@@ -115,7 +116,7 @@ namespace BookMyShow.Repository.Implementations
 
             if (reviews is null || !reviews.Any())
             {
-                throw new MovieNotFoundException();
+                throw new MovieNotFoundException("No reviews found for the specified movie.");
             }
 
             return reviews;

@@ -42,7 +42,7 @@ namespace BookMyShow.Controllers
         /// <returns>A message indicating the result of the deletion.</returns>
         [Authorize(Roles = "TheatreOwner")]
         [HttpDelete]
-        [Route("deleteTheatre/{theatreid:guid}")]
+        [Route("Theatre/{theatreid:guid}")]
         public async Task<IActionResult> DeleteTheatreAsync(Guid theatreid)
         {
             try
@@ -87,7 +87,7 @@ namespace BookMyShow.Controllers
         /// </summary>
         /// <param name="screenid">The ID of the screen to retrieve shows for.</param>
         /// <returns>A list of shows for the specified screen.</returns>
-        [Authorize(Roles = "TheatreOwner,Customer")]
+        [Authorize(Roles = "TheatreOwner")]
         [HttpGet]
         [Route("Shows/{screenid:guid}")]
         public async Task<IActionResult> GetAllShows(Guid screenid)
@@ -101,6 +101,25 @@ namespace BookMyShow.Controllers
         }
 
         /// <summary>
+        /// Retrieves all shows for a specific movie name.
+        /// </summary>
+        /// <param name="movieName">The name of the movie to retrieve shows for.</param>
+        /// <returns>A list of shows for the specified movie name.</returns>
+        [Authorize(Roles = "TheatreOwner,Customer")]
+        [HttpGet]
+        [Route("Shows/{movieName}")]
+        public async Task<IActionResult> GetAllShows(string movieName)
+        {
+            List<ShowResponseDto> shows = await _theatreManagementRepository.GetAllShowsByMovieNameAsync(movieName);
+            if (!shows.Any())
+            {
+                return NotFound("No shows found for the specified movie name.");
+            }
+            return Ok(shows);
+        }
+
+
+        /// <summary>
         /// Adds a new screen to a theatre.
         /// </summary>
         /// <param name="addScreenDto">The screen details to add.</param>
@@ -108,7 +127,7 @@ namespace BookMyShow.Controllers
         /// <exception cref="NotFoundException">Thrown when the theatre is not found.</exception>
         [Authorize(Roles = "TheatreOwner")]
         [HttpPost]
-        [Route("addScreen")]
+        [Route("Screen")]
         public async Task<IActionResult> AddScreen(AddScreenDto addScreenDto)
         {
             try
@@ -130,7 +149,7 @@ namespace BookMyShow.Controllers
         /// <exception cref="NotFoundException">Thrown when the screen is not found.</exception>
         [Authorize(Roles = "TheatreOwner")]
         [HttpDelete]
-        [Route("deleteScreen/{screenId:guid}")]
+        [Route("Screen/{screenId:guid}")]
         public async Task<IActionResult> DeleteScreen(Guid screenId)
         {
             try
@@ -153,7 +172,7 @@ namespace BookMyShow.Controllers
         /// <exception cref="NotFoundException">Thrown when the screen is not found.</exception>
         [Authorize(Roles = "TheatreOwner")]
         [HttpPut]
-        [Route("updateScreen/{screenId:guid}")]
+        [Route("Screen/{screenId:guid}")]
         public async Task<IActionResult> UpdateScreen(Guid screenId, UpdateScreenDto updateScreenDto)
         {
             try
@@ -175,7 +194,7 @@ namespace BookMyShow.Controllers
         /// <exception cref="NotFoundException">Thrown when the screen is not found.</exception>
         [Authorize(Roles = "TheatreOwner")]
         [HttpPost]
-        [Route("addShow")]
+        [Route("Show")]
         public async Task<IActionResult> AddShow(AddShowDto addShowDto)
         {
             try
@@ -197,7 +216,7 @@ namespace BookMyShow.Controllers
         /// <exception cref="NotFoundException">Thrown when the show is not found.</exception>
         [Authorize(Roles = "TheatreOwner")]
         [HttpDelete]
-        [Route("deleteShow/{showId:guid}")]
+        [Route("Show/{showId:guid}")]
         public async Task<IActionResult> DeleteShow(Guid showId)
         {
             try
@@ -220,7 +239,7 @@ namespace BookMyShow.Controllers
         /// <exception cref="NotFoundException">Thrown when the show is not found.</exception>
         [Authorize(Roles = "TheatreOwner")]
         [HttpPut]
-        [Route("updateShow/{showId:guid}")]
+        [Route("Show/{showId:guid}")]
         public async Task<IActionResult> UpdateShow(Guid showId, UpdateShowDto updateShowDto)
         {
             try
