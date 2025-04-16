@@ -1,4 +1,5 @@
 ﻿using BookMyShow.Data;
+using BookMyShow.Data.Entities;
 using BookMyShow.Exceptions;
 using BookMyShow.Models.CommonDTOs;
 using BookMyShow.Models.UserDTOs;
@@ -22,15 +23,15 @@ namespace BookMyShow.Repository.Implementations
         /// <param name="loginDto">The login credentials.</param>
         /// <returns>A ServiceResult containing the authentication result and user information.</returns>
         /// <exception cref="UnauthorizedException">Thrown when the email or password is invalid.</exception>
-        public async Task<ServiceResult> LoginAsync(LoginDto loginDto)
+        public async Task<ServiceResult<User>> LoginAsync(LoginDto loginDto)
         {
             var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == loginDto.Email);
             if (user == null || !VerifyPassword(loginDto.Password, user.Password))
             {
-                throw new UnauthorizedException("Invalid email or password");
+                return new ServiceResult<User> { Success = false, Data = null };
             }
 
-            return new ServiceResult { Success = true, Message = "Login successful", User = user };
+            return new ServiceResult<User> { Success = true, Data = user };
         }
 
         private bool VerifyPassword(string password, string storedPassword)

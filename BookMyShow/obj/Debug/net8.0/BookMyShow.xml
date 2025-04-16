@@ -1,0 +1,549 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BookMyShow</name>
+    </assembly>
+    <members>
+        <member name="M:BookMyShow.Controllers.AuthController.Login(BookMyShow.Models.UserDTOs.LoginDto)">
+            <summary>
+            Authenticates a user and generates a JWT token.
+            </summary>
+            <param name="loginDto">The login credentials.</param>
+            <returns>An IActionResult containing the JWT token and user information.</returns>
+            <exception cref="T:BookMyShow.Exceptions.UnauthorizedException">Thrown when the login credentials are invalid.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.MoviesController.GetAllMovies">
+            <summary>
+            Retrieves all movies.
+            </summary>
+            <returns>A list of movies.</returns>
+            <response code="200">Returns the list of movies</response>
+            <response code="404">If no movies are found</response>
+        </member>
+        <member name="M:BookMyShow.Controllers.MoviesController.GetMovieById(System.Guid)">
+            <summary>
+            Retrieves a movie by its ID.
+            </summary>
+            <param name="id">The ID of the movie to retrieve.</param>
+            <returns>The movie with the specified ID.</returns>
+            <response code="200">Returns the movie with the specified ID</response>
+            <response code="404">If the movie is not found</response>
+        </member>
+        <member name="M:BookMyShow.Controllers.MoviesController.GetMovieByTitleAsync(System.String)">
+            <summary>
+            Retrieves movies by their title.
+            </summary>
+            <param name="title">The title of the movies to retrieve.</param>
+            <returns>A list of movies with the specified title.</returns>
+            <response code="200">Returns the list of movies with the specified title</response>
+            <response code="404">If no movies are found with the specified title</response>
+        </member>
+        <member name="M:BookMyShow.Controllers.MoviesController.AddMovie(BookMyShow.Models.MovieDTOs.AddMovieDto)">
+            <summary>
+            Adds a new movie.
+            </summary>
+            <param name="addmoviedto">The movie details to add.</param>
+            <returns>The added movie.</returns>
+            <response code="200">Returns the added movie</response>
+            <response code="404">If the movie could not be added</response>
+        </member>
+        <member name="M:BookMyShow.Controllers.MoviesController.UpdateMovie(System.Guid,BookMyShow.Models.TheatreDTOs.UpdateMovieDto)">
+            <summary>
+            Updates an existing movie.
+            </summary>
+            <param name="id">The ID of the movie to update.</param>
+            <param name="updatemoviedto">The updated movie details.</param>
+            <returns>The updated movie.</returns>
+            <response code="200">Returns the updated movie</response>
+            <response code="404">If the movie to update is not found</response>
+        </member>
+        <member name="M:BookMyShow.Controllers.MoviesController.DeleteMovie(System.Guid)">
+            <summary>
+            Deletes a movie.
+            </summary>
+            <param name="id">The ID of the movie to delete.</param>
+            <returns>A message indicating the result of the deletion.</returns>
+            <response code="200">Returns a message indicating the result of the deletion</response>
+            <response code="404">If the movie to delete is not found</response>
+        </member>
+        <member name="M:BookMyShow.Controllers.MoviesController.EditMovie(System.Guid,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{BookMyShow.Data.Entities.Movie})">
+            <summary>
+            Applies a JSON patch to an existing movie.
+            </summary>
+            <param name="id">The ID of the movie to patch.</param>
+            <param name="patchmovie">The JSON patch document.</param>
+            <returns>The patched movie.</returns>
+            <response code="200">Returns the patched movie</response>
+            <response code="400">If the JSON patch document is invalid</response>
+            <response code="404">If the movie to patch is not found</response>
+        </member>
+        <member name="M:BookMyShow.Controllers.ReviewsController.AddReview(BookMyShow.Models.ReviewDTOs.AddReviewDto)">
+            <summary>
+            Adds a new review.
+            </summary>
+            <param name="addReviewDto">The review details to add.</param>
+            <returns>The added review.</returns>
+            <exception cref="T:BookMyShow.Exceptions.BadRequestException">Thrown when the review data is invalid.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.ReviewsController.UpdateReview(System.Guid,BookMyShow.Models.ReviewDTOs.UpdateReviewDto)">
+            <summary>
+            Updates an existing review.
+            </summary>
+            <param name="id">The ID of the review to update.</param>
+            <param name="updateReviewDto">The updated review details.</param>
+            <returns>The updated review.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the review is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.ReviewsController.GetReviewsByMovieName(System.String)">
+            <summary>
+            Retrieves reviews for a specific movie.
+            </summary>
+            <param name="movieId">The ID of the movie to retrieve reviews for.</param>
+            <returns>A list of reviews for the specified movie.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the movie or reviews are not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.ReviewsController.DeleteReview(System.Guid)">
+            <summary>
+            Deletes a review.
+            </summary>
+            <param name="reviewid">The ID of the review to delete.</param>
+            <returns>A message indicating the result of the deletion.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the review is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatreManagementController.GetAllTheatres">
+            <summary>
+            Retrieves all theatres.
+            </summary>
+            <returns>A list of theatres.</returns>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatreManagementController.DeleteTheatreAsync(System.Guid)">
+            <summary>
+            Deletes a theatre by the theatre's ID.
+            </summary>
+            <param name="theatreid">The ID of the theatre.</param>
+            <returns>A message indicating the result of the deletion.</returns>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatreManagementController.GetAllScreens(System.Guid)">
+            <summary>
+            Retrieves all screens for a specific theatre.
+            </summary>
+            <param name="theatreid">The ID of the theatre to retrieve screens for.</param>
+            <returns>A list of screens for the specified theatre.</returns>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatreManagementController.GetAllShows(System.Guid)">
+            <summary>
+            Retrieves all shows for a specific screen.
+            </summary>
+            <param name="screenid">The ID of the screen to retrieve shows for.</param>
+            <returns>A list of shows for the specified screen.</returns>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatreManagementController.GetShow(System.Guid)">
+            <summary>
+            Retrieves a specific show by its ID.
+            </summary>
+            <param name="showid">The ID of the show to retrieve.</param>
+            <returns>The details of the specified show.</returns>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatreManagementController.GetAllShows(System.String)">
+            <summary>
+            Retrieves all shows for a specific movie name.
+            </summary>
+            <param name="movieName">The name of the movie to retrieve shows for.</param>
+            <returns>A list of shows for the specified movie name.</returns>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatreManagementController.AddScreen(BookMyShow.Models.TheatreDTOs.AddScreenDto)">
+            <summary>
+            Adds a new screen to a theatre.
+            </summary>
+            <param name="addScreenDto">The screen details to add.</param>
+            <returns>The added screen.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the theatre is not found.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when a duplicate screen is detected.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatreManagementController.DeleteScreen(System.Guid)">
+            <summary>
+            Deletes a screen from the database.
+            </summary>
+            <param name="screenId">The ID of the screen to delete.</param>
+            <returns>A message indicating the result of the deletion.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the screen is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatreManagementController.UpdateScreen(System.Guid,BookMyShow.Models.TheatreDTOs.UpdateScreenDto)">
+            <summary>
+            Updates an existing screen in the database.
+            </summary>
+            <param name="screenId">The ID of the screen to update.</param>
+            <param name="updateScreenDto">The updated screen details.</param>
+            <returns>The updated screen.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the screen is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatreManagementController.AddShow(BookMyShow.Models.TheatreDTOs.AddShowDto)">
+            <summary>
+            Adds a new show to a screen.
+            </summary>
+            <param name="addShowDto">The show details to add.</param>
+            <returns>The added show.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the screen is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatreManagementController.DeleteShow(System.Guid)">
+            <summary>
+            Deletes a show from the database.
+            </summary>
+            <param name="showId">The ID of the show to delete.</param>
+            <returns>A message indicating the result of the deletion.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the show is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatreManagementController.UpdateShow(System.Guid,BookMyShow.Models.TheatreDTOs.UpdateShowDto)">
+            <summary>
+            Updates an existing show in the database.
+            </summary>
+            <param name="showId">The ID of the show to update.</param>
+            <param name="updateShowDto">The updated show details.</param>
+            <returns>The updated show.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the show is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatreManagementController.RemoveTheatreofTheatreOwner(System.Guid)">
+            <summary>
+            Removes a theatre from a theatre owner.
+            </summary>
+            <param name="ownerId">The ID of the theatre owner.</param>
+            <returns>A message indicating the result of the removal.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the theatre owner is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatresController.GetTheatreOwners">
+            <summary>
+            Retrieves all theatre owners.
+            </summary>
+            <returns>A list of theatre owners.</returns>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatresController.GetTheatre(System.Guid)">
+            <summary>
+            Retrieves a theatre owner by their ID.
+            </summary>
+            <param name="ownerid">The ID of the theatre owner to retrieve.</param>
+            <returns>The theatre owner with the specified ID.</returns>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatresController.AddTheatreToTheatreOwner(System.Guid,BookMyShow.Models.TheatreDTOs.AddTheatreDto)">
+            <summary>
+            Adds a new theatre to a theatre owner.
+            </summary>
+            <param name="ownerid">The ID of the theatre owner.</param>
+            <param name="addtheatredto">The theatre details to add.</param>
+            <returns>The added theatre.</returns>
+        </member>
+        <member name="M:BookMyShow.Controllers.TheatresController.DeleteTheatre(System.Guid)">
+            <summary>
+            Deletes a theatre by the theatre owner's ID.
+            </summary>
+            <param name="ownerid">The ID of the theatre owner.</param>
+            <returns>A message indicating the result of the deletion.</returns>
+        </member>
+        <member name="M:BookMyShow.Controllers.TicketsController.BookTicket(BookMyShow.Models.BookTicketDto)">
+            <summary>
+            Books a ticket for a show.
+            </summary>
+            <param name="bookTicketDto">The ticket booking details.</param>
+            <returns>The booked ticket.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the show or customer is not found.</exception>
+            <exception cref="T:BookMyShow.Exceptions.BadRequestException">Thrown when the user role is invalid or requested seats are not available.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.TicketsController.GetAvailableSeats(System.Guid)">
+            <summary>
+            Retrieves the available seats for a specific show.
+            </summary>
+            <param name="showId">The ID of the show to retrieve available seats for.</param>
+            <returns>The available seats for the specified show.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the show is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.TicketsController.CancelTicket(System.Guid)">
+            <summary>
+            Cancels a ticket and restores the seats.
+            </summary>
+            <param name="ticketId">The ID of the ticket to cancel.</param>
+            <returns>A message indicating the result of the cancellation.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the ticket or show is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.TicketsController.GetTicketDetails(System.Guid)">
+            <summary>
+            Retrieves the details of a specific ticket.
+            </summary>
+            <param name="ticketId">The ID of the ticket to retrieve details for.</param>
+            <returns>The details of the specified ticket.</returns>
+        </member>
+        <member name="M:BookMyShow.Controllers.TicketsController.GetBookedTickets">
+            <summary>
+            Retrieves all booked tickets.
+            </summary>
+            <returns>A list of booked tickets.</returns>
+        </member>
+        <member name="M:BookMyShow.Controllers.TicketsController.GetTicketsByCustomer(System.Guid)">
+            <summary>
+            Retrieves all tickets booked by a specific customer.
+            </summary>
+            <param name="customerId">The ID of the customer to retrieve tickets for.</param>
+            <returns>A list of tickets booked by the specified customer.</returns>
+        </member>
+        <member name="M:BookMyShow.Controllers.UserController.GetAllUsers">
+            <summary>
+            Retrieves all users.
+            </summary>
+            <returns>A list of users.</returns>
+        </member>
+        <member name="M:BookMyShow.Controllers.UserController.AddUser(BookMyShow.Models.UserDTOs.AddUserDto)">
+            <summary>
+            Adds a new user.
+            </summary>
+            <param name="addUserDto">The user details to add.</param>
+            <returns>The added user.</returns>
+            <exception cref="T:BookMyShow.Exceptions.BadRequestException">Thrown when the user data is invalid.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.UserController.DeleteUser(System.Guid)">
+            <summary>
+            Deletes a user.
+            </summary>
+            <param name="userid">The ID of the user to delete.</param>
+            <returns>A message indicating the result of the deletion.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the user is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Controllers.UserController.GetUser(System.Guid)">
+            <summary>
+            Retrieves a specific user by their ID.
+            </summary>
+            <param name="userid">The ID of the user to retrieve.</param>
+            <returns>The details of the specified user.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the user is not found.</exception>
+        </member>
+        <member name="T:BookMyShow.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:BookMyShow.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BookMyShow.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BookMyShow.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.AuthRepository.LoginAsync(BookMyShow.Models.UserDTOs.LoginDto)">
+            <summary>
+            Authenticates a user based on the provided login credentials.
+            </summary>
+            <param name="loginDto">The login credentials.</param>
+            <returns>A ServiceResult containing the authentication result and user information.</returns>
+            <exception cref="T:BookMyShow.Exceptions.UnauthorizedException">Thrown when the email or password is invalid.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.ReviewRepository.AddReviewAsync(BookMyShow.Models.ReviewDTOs.AddReviewDto)">
+            <summary>
+            Adds a new review to the database.
+            </summary>
+            <param name="addReviewDto">The review details to add.</param>
+            <returns>The added review.</returns>
+            <exception cref="T:BookMyShow.Exceptions.InvalidReviewDataException">Thrown when the review data is invalid.</exception>
+            <exception cref="T:BookMyShow.Exceptions.ReviewNotFoundException">Thrown when the review is not found after adding.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.ReviewRepository.UpdateReviewAsync(System.Guid,BookMyShow.Models.ReviewDTOs.UpdateReviewDto)">
+            <summary>
+            Updates an existing review in the database.
+            </summary>
+            <param name="id">The ID of the review to update.</param>
+            <param name="updateReviewDto">The updated review details.</param>
+            <returns>The updated review.</returns>
+            <exception cref="T:BookMyShow.Exceptions.ReviewNotFoundException">Thrown when the review is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.ReviewRepository.GetReviewsByMovieNameAsync(System.String)">
+            <summary>
+            Retrieves reviews for a specific movie.
+            </summary>
+            <param name="movieId">The ID of the movie to retrieve reviews for.</param>
+            <returns>A list of reviews for the specified movie.</returns>
+            <exception cref="T:BookMyShow.Exceptions.MovieNotFoundException">Thrown when the movie or reviews are not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.ReviewRepository.DeleteReviewAsync(System.Guid)">
+            <summary>
+            Deletes a review from the database.
+            </summary>
+            <param name="reviewid">The ID of the review to delete.</param>
+            <returns>A message indicating the result of the deletion.</returns>
+            <exception cref="T:BookMyShow.Exceptions.ReviewNotFoundException">Thrown when the review is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreManagementRepository.GetAllTheatresAsync">
+            <summary>
+            Retrieves all theatres from the database.
+            </summary>
+            <returns>A list of theatres.</returns>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreManagementRepository.DeleteTheatreAsync(System.Guid)">
+            <summary>
+            Deletes a theatre by the theatre's ID.
+            </summary>
+            <param name="theatreid">The ID of the theatre.</param>
+            <returns>A message indicating the result of the deletion.</returns>
+            <exception cref="T:BookMyShow.Exceptions.TheatreOwnerNotFoundException">Thrown when the theatre owner is not found.</exception>
+            <exception cref="T:BookMyShow.Exceptions.TheatreNotFoundException">Thrown when the theatre is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreManagementRepository.GetAllScreensAsync(System.Guid)">
+            <summary>
+            Retrieves all screens for a specific theatre.
+            </summary>
+            <param name="theatreid">The ID of the theatre to retrieve screens for.</param>
+            <returns>A list of screens for the specified theatre.</returns>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreManagementRepository.GetAllShowsAsync(System.Guid)">
+            <summary>
+            Retrieves all shows for a specific screen.
+            </summary>
+            <param name="screenid">The ID of the screen to retrieve shows for.</param>
+            <returns>A list of shows for the specified screen.</returns>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreManagementRepository.GetAllShowsByMovieNameAsync(System.String)">
+            <summary>
+            Retrieves all shows by the movie name.
+            </summary>
+            <param name="movieName">The name of the movie to search for.</param>
+            <returns>A list of shows that match the specified movie name.</returns>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreManagementRepository.AddScreenAsync(BookMyShow.Models.TheatreDTOs.AddScreenDto)">
+            <summary>
+            Adds a new screen to a theatre.
+            </summary>
+            <param name="addScreenDto">The screen details to add.</param>
+            <returns>The added screen.</returns>
+            <exception cref="T:BookMyShow.Exceptions.TheatreNotFoundException">Thrown when the theatre is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreManagementRepository.DeleteScreenAsync(System.Guid)">
+            <summary>
+            Deletes a screen from the database.
+            </summary>
+            <param name="screenId">The ID of the screen to delete.</param>
+            <returns>A message indicating the result of the deletion.</returns>
+            <exception cref="T:BookMyShow.Exceptions.ScreenNotFoundException">Thrown when the screen is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreManagementRepository.UpdateScreenAsync(System.Guid,BookMyShow.Models.TheatreDTOs.UpdateScreenDto)">
+            <summary>
+            Updates an existing screen in the database.
+            </summary>
+            <param name="screenId">The ID of the screen to update.</param>
+            <param name="updateScreenDto">The updated screen details.</param>
+            <returns>The updated screen.</returns>
+            <exception cref="T:BookMyShow.Exceptions.ScreenNotFoundException">Thrown when the screen is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreManagementRepository.AddShowAsync(BookMyShow.Models.TheatreDTOs.AddShowDto)">
+            <summary>
+            Adds a new show to a screen.
+            </summary>
+            <param name="addShowDto">The show details to add.</param>
+            <returns>The added show.</returns>
+            <exception cref="T:BookMyShow.Exceptions.ScreenNotFoundException">Thrown when the screen is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreManagementRepository.DeleteShowAsync(System.Guid)">
+            <summary>
+            Deletes a show from the database.
+            </summary>
+            <param name="showId">The ID of the show to delete.</param>
+            <returns>A message indicating the result of the deletion.</returns>
+            <exception cref="T:BookMyShow.Exceptions.ShowNotFoundException">Thrown when the show is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreManagementRepository.UpdateShowAsync(System.Guid,BookMyShow.Models.TheatreDTOs.UpdateShowDto)">
+            <summary>
+            Updates an existing show in the database.
+            </summary>
+            <param name="showId">The ID of the show to update.</param>
+            <param name="updateShowDto">The updated show details.</param>
+            <returns>The updated show.</returns>
+            <exception cref="T:BookMyShow.Exceptions.ShowNotFoundException">Thrown when the show is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreManagementRepository.RemoveTheatreofTheatreOwnerAsync(System.Guid)">
+            <summary>
+            Removes a theatre from a theatre owner.
+            </summary>
+            <param name="ownerId">The ID of the theatre owner.</param>
+            <returns>A message indicating the result of the removal.</returns>
+            <exception cref="T:BookMyShow.Exceptions.TheatreNotFoundException">Thrown when the theatre owner is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreRepository.GetTheatreOwnersAsync">
+            <summary>
+            Retrieves all theatre owners from the database.
+            </summary>
+            <returns>A list of theatre owners.</returns>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreRepository.GetTheatreAsync(System.Guid)">
+            <summary>
+            Retrieves a theatre owner by their ID.
+            </summary>
+            <param name="ownerid">The ID of the theatre owner to retrieve.</param>
+            <returns>The theatre owner with the specified ID.</returns>
+            <exception cref="T:BookMyShow.Exceptions.TheatreOwnerNotFoundException">Thrown when the theatre owner is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreRepository.AddTheatreToTheatreOwnerAsync(System.Guid,BookMyShow.Models.TheatreDTOs.AddTheatreDto)">
+            <summary>
+            Adds a new theatre to a theatre owner.
+            </summary>
+            <param name="ownerid">The ID of the theatre owner.</param>
+            <param name="addtheatredto">The theatre details to add.</param>
+            <returns>The added theatre.</returns>
+            <exception cref="T:BookMyShow.Exceptions.TheatreOwnerNotFoundException">Thrown when the theatre owner is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TheatreRepository.DeleteTheatreAsync(System.Guid)">
+            <summary>
+            Deletes a theatre by the theatre owner's ID.
+            </summary>
+            <param name="ownerid">The ID of the theatre owner.</param>
+            <returns>A message indicating the result of the deletion.</returns>
+            <exception cref="T:BookMyShow.Exceptions.TheatreOwnerNotFoundException">Thrown when the theatre owner is not found.</exception>
+            <exception cref="T:BookMyShow.Exceptions.TheatreNotFoundException">Thrown when the theatre is not found.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TicketRepository.BookTicketAsync(BookMyShow.Models.BookTicketDto)">
+            <summary>
+            Books a ticket for a show.
+            </summary>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TicketRepository.GetAvailableSeatsAsync(System.Guid)">
+            <summary>
+            Retrieves the available seats for a specific show.
+            </summary>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TicketRepository.CancelTicketAsync(System.Guid)">
+            <summary>
+            Cancels a ticket and restores the seats.
+            </summary>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TicketRepository.GetTicketDetailsAsync(System.Guid)">
+            <summary>
+            Retrieves the details of a specific ticket.
+            </summary>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TicketRepository.GetBookedTicketsAsync">
+            <summary>
+            Retrieves all booked tickets.
+            </summary>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.TicketRepository.GetTicketsByCustomerAsync(System.Guid)">
+            <summary>
+            Retrieves all tickets booked by a specific customer.
+            </summary>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.UserRepository.GetAllUsersAsync">
+            <summary>
+            Retrieves all users from the database.
+            </summary>
+            <returns>A list of users.</returns>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.UserRepository.AddUsersAsync(BookMyShow.Models.UserDTOs.AddUserDto)">
+            <summary>
+            Adds a new user to the database.
+            </summary>
+            <param name="adduserdto">The user details to add.</param>
+            <returns>The added user.</returns>
+            <exception cref="T:BookMyShow.Exceptions.DuplicateRecordException">Thrown when the username, email, or phone number already exists.</exception>
+        </member>
+        <member name="M:BookMyShow.Repository.Implementations.UserRepository.DeleteUserAsync(System.Guid)">
+            <summary>
+            Deletes a user from the database.
+            </summary>
+            <param name="userid">The ID of the user to delete.</param>
+            <returns>A message indicating the result of the deletion.</returns>
+            <exception cref="T:BookMyShow.Exceptions.NotFoundException">Thrown when the user is not found.</exception>
+        </member>
+    </members>
+</doc>

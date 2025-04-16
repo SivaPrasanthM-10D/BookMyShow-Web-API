@@ -50,33 +50,34 @@ namespace BookMyShow.Controllers
         {
             try
             {
-                ServiceResult result = await _authRepository.LoginAsync(loginDto);
+                ServiceResult<User> result = await _authRepository.LoginAsync(loginDto);
                 if (result.Success)
                 {
-                    User user = result.User;
+                    User user = result.Data!;
                     var userRole = user.Role;
                     var authClaims = new List<Claim>
                     {
-                        new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]!),
+                        new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+                        new Claim(ClaimTypes.Name, user.UserName),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         new Claim(ClaimTypes.Role, userRole)
                     };
                     var token = new JwtSecurityToken(
                         issuer: _configuration["Jwt:Issuer"],
-                        expires: DateTime.Now.AddMinutes(1),
+                        expires: DateTime.Now.AddMinutes(60),
                         claims: authClaims,
                         signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!)),
                         SecurityAlgorithms.HmacSha256
                         )
                         );
 
-                    return Ok(new {Token = new JwtSecurityTokenHandler().WriteToken(token), user});
+                    return Ok(new ServiceResult<string> {Success = true, StatusCode = 200, Message = "Ok", Data = new JwtSecurityTokenHandler().WriteToken(token)});
                 }
-                throw new UnauthorizedException("Invalid Credentials. Login failed.");
+                throw new UnauthorizedException("Invalid email or password");
             }
             catch (UnauthorizedException ex)
             {
-                return Unauthorized(ex.Message);
+                return Unauthorized(new ServiceResult<string> { Success = false, StatusCode = 401, Message = ex.Message, Data = null });
             }
         }
 

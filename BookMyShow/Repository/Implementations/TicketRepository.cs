@@ -20,11 +20,6 @@ namespace BookMyShow.Repository.Implementations
         /// <summary>
         /// Books a ticket for a show.
         /// </summary>
-        /// <param name="bookTicketDto">The ticket booking details.</param>
-        /// <returns>The booked ticket.</returns>
-        /// <exception cref="ShowNotFoundException">Thrown when the show is not found.</exception>
-        /// <exception cref="CustomerNotFoundException">Thrown when the customer is not found.</exception>
-        /// <exception cref="InvalidTicketDataException">Thrown when the user role is invalid or requested seats are not available.</exception>
         public async Task<TicketDetailsDto?> BookTicketAsync(BookTicketDto bookTicketDto)
         {
             Show? show = await dbContext.Shows.FindAsync(bookTicketDto.ShowId);
@@ -33,17 +28,12 @@ namespace BookMyShow.Repository.Implementations
                 throw new ShowNotFoundException("Show not found.");
             }
 
-            Customer? customer = await dbContext.Customers.FindAsync(bookTicketDto.CustomerId);
+            Customer? customer = await dbContext.Customers
+                .Include(c => c.Tickets) // Ensure tickets are loaded
+                .FirstOrDefaultAsync(c => c.CustomerId == bookTicketDto.CustomerId);
             if (customer == null)
             {
                 throw new CustomerNotFoundException("Customer not found.");
-            }
-
-            // Check if the user is a customer
-            User? user = await dbContext.Users.FindAsync(customer.CustomerId);
-            if (user == null || user.Role != "Customer")
-            {
-                throw new BadRequestException("Invalid user role.");
             }
 
             // Check if the requested seats are available
@@ -70,22 +60,15 @@ namespace BookMyShow.Repository.Implementations
             };
 
             await dbContext.Tickets.AddAsync(ticket);
+            customer.Tickets.Add(ticket); // Add ticket to customer's collection
             await dbContext.SaveChangesAsync();
 
-            // Save the updated available seats list
-            dbContext.Entry(show).State = EntityState.Modified;
-            await dbContext.SaveChangesAsync();
-
-            var ticketDetails = await GetTicketDetailsAsync(ticket.TicketId);
-            return ticketDetails;
+            return await GetTicketDetailsAsync(ticket.TicketId);
         }
 
         /// <summary>
         /// Retrieves the available seats for a specific show.
         /// </summary>
-        /// <param name="showId">The ID of the show to retrieve available seats for.</param>
-        /// <returns>The available seats for the specified show.</returns>
-        /// <exception cref="ShowNotFoundException">Thrown when the show is not found.</exception>
         public async Task<AvailableSeatsDto?> GetAvailableSeatsAsync(Guid showId)
         {
             Show? show = await dbContext.Shows.FindAsync(showId);
@@ -104,13 +87,11 @@ namespace BookMyShow.Repository.Implementations
         /// <summary>
         /// Cancels a ticket and restores the seats.
         /// </summary>
-        /// <param name="ticketId">The ID of the ticket to cancel.</param>
-        /// <returns>A message indicating the result of the cancellation.</returns>
-        /// <exception cref="TicketNotFoundException">Thrown when the ticket is not found.</exception>
-        /// <exception cref="ShowNotFoundException">Thrown when the show is not found.</exception>
         public async Task<string?> CancelTicketAsync(Guid ticketId)
         {
-            Ticket? ticket = await dbContext.Tickets.FindAsync(ticketId);
+            Ticket? ticket = await dbContext.Tickets
+                .Include(t => t.Customer) // Ensure customer is loaded
+                .FirstOrDefaultAsync(t => t.TicketId == ticketId);
             if (ticket == null)
             {
                 throw new TicketNotFoundException("Ticket not found.");
@@ -129,7 +110,7 @@ namespace BookMyShow.Repository.Implementations
             }
 
             dbContext.Tickets.Remove(ticket);
-            dbContext.Entry(show).State = EntityState.Modified;
+            ticket.Customer.Tickets.Remove(ticket); // Remove ticket from customer's collection
             await dbContext.SaveChangesAsync();
 
             return "Ticket cancelled and seats restored";
@@ -138,9 +119,6 @@ namespace BookMyShow.Repository.Implementations
         /// <summary>
         /// Retrieves the details of a specific ticket.
         /// </summary>
-        /// <param name="ticketId">The ID of the ticket to retrieve details for.</param>
-        /// <returns>The details of the specified ticket.</returns>
-        /// <exception cref="TicketNotFoundException">Thrown when the ticket is not found.</exception>
         public async Task<TicketDetailsDto?> GetTicketDetailsAsync(Guid ticketId)
         {
             Ticket? ticket = await dbContext.Tickets
@@ -157,7 +135,7 @@ namespace BookMyShow.Repository.Implementations
                 throw new TicketNotFoundException("Ticket not found.");
             }
 
-            var ticketDetails = new TicketDetailsDto
+            return new TicketDetailsDto
             {
                 TicketId = ticket.TicketId,
                 CustomerName = ticket.Customer.CustomerName,
@@ -169,17 +147,14 @@ namespace BookMyShow.Repository.Implementations
                 SeatNo = ticket.SeatNo,
                 TicketPrice = ticket.TicketPrice
             };
-
-            return ticketDetails;
         }
 
         /// <summary>
         /// Retrieves all booked tickets.
         /// </summary>
-        /// <returns>A list of booked tickets.</returns>
         public async Task<List<BookedTicketsDto>> GetBookedTicketsAsync()
         {
-            List<BookedTicketsDto> bookedTickets = await dbContext.Tickets
+            return await dbContext.Tickets
                 .Include(t => t.Customer)
                 .Include(t => t.Show)
                 .Select(t => new BookedTicketsDto
@@ -194,18 +169,14 @@ namespace BookMyShow.Repository.Implementations
                     CustomerName = t.Customer.CustomerName
                 })
                 .ToListAsync();
-
-            return bookedTickets;
         }
 
         /// <summary>
         /// Retrieves all tickets booked by a specific customer.
         /// </summary>
-        /// <param name="customerId">The ID of the customer to retrieve tickets for.</param>
-        /// <returns>A list of tickets booked by the specified customer.</returns>
         public async Task<List<BookedTicketsDto>> GetTicketsByCustomerAsync(Guid customerId)
         {
-            List<BookedTicketsDto> customerTickets = await dbContext.Tickets
+            return await dbContext.Tickets
                 .Include(t => t.Customer)
                 .Include(t => t.Show)
                 .Where(t => t.CustomerId == customerId)
@@ -221,8 +192,6 @@ namespace BookMyShow.Repository.Implementations
                     CustomerName = t.Customer.CustomerName
                 })
                 .ToListAsync();
-
-            return customerTickets;
         }
     }
 }

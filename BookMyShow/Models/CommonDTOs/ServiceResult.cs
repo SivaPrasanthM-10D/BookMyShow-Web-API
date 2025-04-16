@@ -1,11 +1,11 @@
-﻿using BookMyShow.Data.Entities;
-
+﻿
 namespace BookMyShow.Models.CommonDTOs
 {
-    public class ServiceResult
+    public class ServiceResult<T>
     {
         public bool Success { get; set; }
-        public string Message { get; set; }
-        public User User { get; internal set; }
+        public int StatusCode { get; set; }
+        public string Message { get; set; } = string.Empty;
+        public T? Data { get; internal set; }
     }
 }

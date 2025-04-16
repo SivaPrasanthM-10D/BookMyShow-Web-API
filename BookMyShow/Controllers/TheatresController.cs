@@ -73,7 +73,7 @@ namespace BookMyShow.Controllers
         /// <param name="addtheatredto">The theatre details to add.</param>
         /// <returns>The added theatre.</returns>
         [HttpPost]
-        [Route("{ownerid:guid}")]
+        [Route("{ownerid}")]
         public async Task<IActionResult> AddTheatreToTheatreOwner(Guid ownerid, AddTheatreDto addtheatredto)
         {
             try

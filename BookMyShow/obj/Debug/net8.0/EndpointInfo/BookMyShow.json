@@ -10,7 +10,9 @@
         "tags": [
           "Auth"
         ],
+        "summary": "Authenticates a user and generates a JWT token.",
         "requestBody": {
+          "description": "The login credentials.",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -46,9 +48,13 @@
         "tags": [
           "Movies"
         ],
+        "summary": "Retrieves all movies.",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Returns the list of movies"
+          },
+          "404": {
+            "description": "If no movies are found"
           }
         }
       },
@@ -56,7 +62,9 @@
         "tags": [
           "Movies"
         ],
+        "summary": "Adds a new movie.",
         "requestBody": {
+          "description": "The movie details to add.",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -82,7 +90,10 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Returns the added movie"
+          },
+          "404": {
+            "description": "If the movie could not be added"
           }
         }
       }
@@ -92,10 +103,12 @@
         "tags": [
           "Movies"
         ],
+        "summary": "Retrieves a movie by its ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The ID of the movie to retrieve.",
             "required": true,
             "schema": {
               "type": "string",
@@ -105,7 +118,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Returns the movie with the specified ID"
+          },
+          "404": {
+            "description": "If the movie is not found"
           }
         }
       },
@@ -113,10 +129,12 @@
         "tags": [
           "Movies"
         ],
+        "summary": "Updates an existing movie.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The ID of the movie to update.",
             "required": true,
             "schema": {
               "type": "string",
@@ -125,6 +143,7 @@
           }
         ],
         "requestBody": {
+          "description": "The updated movie details.",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -150,7 +169,10 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Returns the updated movie"
+          },
+          "404": {
+            "description": "If the movie to update is not found"
           }
         }
       },
@@ -158,10 +180,12 @@
         "tags": [
           "Movies"
         ],
+        "summary": "Deletes a movie.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The ID of the movie to delete.",
             "required": true,
             "schema": {
               "type": "string",
@@ -171,7 +195,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Returns a message indicating the result of the deletion"
+          },
+          "404": {
+            "description": "If the movie to delete is not found"
           }
         }
       },
@@ -179,10 +206,12 @@
         "tags": [
           "Movies"
         ],
+        "summary": "Applies a JSON patch to an existing movie.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The ID of the movie to patch.",
             "required": true,
             "schema": {
               "type": "string",
@@ -191,6 +220,7 @@
           }
         ],
         "requestBody": {
+          "description": "The JSON patch document.",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -228,7 +258,13 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Returns the patched movie"
+          },
+          "400": {
+            "description": "If the JSON patch document is invalid"
+          },
+          "404": {
+            "description": "If the movie to patch is not found"
           }
         }
       }
@@ -238,10 +274,12 @@
         "tags": [
           "Movies"
         ],
+        "summary": "Retrieves movies by their title.",
         "parameters": [
           {
             "name": "title",
             "in": "path",
+            "description": "The title of the movies to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -250,7 +288,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Returns the list of movies with the specified title"
+          },
+          "404": {
+            "description": "If no movies are found with the specified title"
           }
         }
       }
@@ -260,7 +301,9 @@
         "tags": [
           "Reviews"
         ],
+        "summary": "Adds a new review.",
         "requestBody": {
+          "description": "The review details to add.",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -296,10 +339,12 @@
         "tags": [
           "Reviews"
         ],
+        "summary": "Updates an existing review.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The ID of the review to update.",
             "required": true,
             "schema": {
               "type": "string",
@@ -308,6 +353,7 @@
           }
         ],
         "requestBody": {
+          "description": "The updated review details.",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -343,6 +389,7 @@
         "tags": [
           "Reviews"
         ],
+        "summary": "Retrieves reviews for a specific movie.",
         "parameters": [
           {
             "name": "movieName",
@@ -365,10 +412,12 @@
         "tags": [
           "Reviews"
         ],
+        "summary": "Deletes a review.",
         "parameters": [
           {
             "name": "reviewid",
             "in": "path",
+            "description": "The ID of the review to delete.",
             "required": true,
             "schema": {
               "type": "string",
@@ -388,6 +437,7 @@
         "tags": [
           "TheatreManagement"
         ],
+        "summary": "Retrieves all theatres.",
         "responses": {
           "200": {
             "description": "OK"
@@ -395,15 +445,17 @@
         }
       }
     },
-    "/api/TheatreManagement/deleteTheatre/{theatreid}": {
+    "/api/TheatreManagement/Theatre/{theatreid}": {
       "delete": {
         "tags": [
           "TheatreManagement"
         ],
+        "summary": "Deletes a theatre by the theatre's ID.",
         "parameters": [
           {
             "name": "theatreid",
             "in": "path",
+            "description": "The ID of the theatre.",
             "required": true,
             "schema": {
               "type": "string",
@@ -423,10 +475,12 @@
         "tags": [
           "TheatreManagement"
         ],
+        "summary": "Retrieves all screens for a specific theatre.",
         "parameters": [
           {
             "name": "theatreid",
             "in": "path",
+            "description": "The ID of the theatre to retrieve screens for.",
             "required": true,
             "schema": {
               "type": "string",
@@ -446,10 +500,12 @@
         "tags": [
           "TheatreManagement"
         ],
+        "summary": "Retrieves all shows for a specific screen.",
         "parameters": [
           {
             "name": "screenid",
             "in": "path",
+            "description": "The ID of the screen to retrieve shows for.",
             "required": true,
             "schema": {
               "type": "string",
@@ -464,15 +520,42 @@
         }
       }
     },
-    "/api/TheatreManagement/Shows/{movieName}": {
+    "/api/TheatreManagement/Show/{showid}": {
       "get": {
         "tags": [
           "TheatreManagement"
         ],
+        "summary": "Retrieves a specific show by its ID.",
+        "parameters": [
+          {
+            "name": "showid",
+            "in": "path",
+            "description": "The ID of the show to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TheatreManagement/Shows/ByMovie/{movieName}": {
+      "get": {
+        "tags": [
+          "TheatreManagement"
+        ],
+        "summary": "Retrieves all shows for a specific movie name.",
         "parameters": [
           {
             "name": "movieName",
             "in": "path",
+            "description": "The name of the movie to retrieve shows for.",
             "required": true,
             "schema": {
               "type": "string"
@@ -486,12 +569,14 @@
         }
       }
     },
-    "/api/TheatreManagement/addScreen": {
+    "/api/TheatreManagement/Screen": {
       "post": {
         "tags": [
           "TheatreManagement"
         ],
+        "summary": "Adds a new screen to a theatre.",
         "requestBody": {
+          "description": "The screen details to add.",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -522,15 +607,17 @@
         }
       }
     },
-    "/api/TheatreManagement/deleteScreen/{screenId}": {
+    "/api/TheatreManagement/Screen/{screenId}": {
       "delete": {
         "tags": [
           "TheatreManagement"
         ],
+        "summary": "Deletes a screen from the database.",
         "parameters": [
           {
             "name": "screenId",
             "in": "path",
+            "description": "The ID of the screen to delete.",
             "required": true,
             "schema": {
               "type": "string",
@@ -543,17 +630,17 @@
             "description": "OK"
           }
         }
-      }
-    },
-    "/api/TheatreManagement/updateScreen/{screenId}": {
+      },
       "put": {
         "tags": [
           "TheatreManagement"
         ],
+        "summary": "Updates an existing screen in the database.",
         "parameters": [
           {
             "name": "screenId",
             "in": "path",
+            "description": "The ID of the screen to update.",
             "required": true,
             "schema": {
               "type": "string",
@@ -562,6 +649,7 @@
           }
         ],
         "requestBody": {
+          "description": "The updated screen details.",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -592,12 +680,14 @@
         }
       }
     },
-    "/api/TheatreManagement/addShow": {
+    "/api/TheatreManagement/Show": {
       "post": {
         "tags": [
           "TheatreManagement"
         ],
+        "summary": "Adds a new show to a screen.",
         "requestBody": {
+          "description": "The show details to add.",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -628,15 +718,17 @@
         }
       }
     },
-    "/api/TheatreManagement/deleteShow/{showId}": {
+    "/api/TheatreManagement/Show/{showId}": {
       "delete": {
         "tags": [
           "TheatreManagement"
         ],
+        "summary": "Deletes a show from the database.",
         "parameters": [
           {
             "name": "showId",
             "in": "path",
+            "description": "The ID of the show to delete.",
             "required": true,
             "schema": {
               "type": "string",
@@ -649,17 +741,17 @@
             "description": "OK"
           }
         }
-      }
-    },
-    "/api/TheatreManagement/updateShow/{showId}": {
+      },
       "put": {
         "tags": [
           "TheatreManagement"
         ],
+        "summary": "Updates an existing show in the database.",
         "parameters": [
           {
             "name": "showId",
             "in": "path",
+            "description": "The ID of the show to update.",
             "required": true,
             "schema": {
               "type": "string",
@@ -668,6 +760,7 @@
           }
         ],
         "requestBody": {
+          "description": "The updated show details.",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -703,10 +796,12 @@
         "tags": [
           "TheatreManagement"
         ],
+        "summary": "Removes a theatre from a theatre owner.",
         "parameters": [
           {
             "name": "ownerId",
             "in": "path",
+            "description": "The ID of the theatre owner.",
             "required": true,
             "schema": {
               "type": "string",
@@ -726,6 +821,7 @@
         "tags": [
           "Theatres"
         ],
+        "summary": "Retrieves all theatre owners.",
         "responses": {
           "200": {
             "description": "OK"
@@ -738,10 +834,12 @@
         "tags": [
           "Theatres"
         ],
+        "summary": "Retrieves a theatre owner by their ID.",
         "parameters": [
           {
             "name": "ownerid",
             "in": "path",
+            "description": "The ID of the theatre owner to retrieve.",
             "required": true,
             "schema": {
               "type": "string",
@@ -759,10 +857,12 @@
         "tags": [
           "Theatres"
         ],
+        "summary": "Adds a new theatre to a theatre owner.",
         "parameters": [
           {
             "name": "ownerid",
             "in": "path",
+            "description": "The ID of the theatre owner.",
             "required": true,
             "schema": {
               "type": "string",
@@ -771,6 +871,7 @@
           }
         ],
         "requestBody": {
+          "description": "The theatre details to add.",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -804,10 +905,12 @@
         "tags": [
           "Theatres"
         ],
+        "summary": "Deletes a theatre by the theatre owner's ID.",
         "parameters": [
           {
             "name": "ownerid",
             "in": "path",
+            "description": "The ID of the theatre owner.",
             "required": true,
             "schema": {
               "type": "string",
@@ -827,7 +930,9 @@
         "tags": [
           "Tickets"
         ],
+        "summary": "Books a ticket for a show.",
         "requestBody": {
+          "description": "The ticket booking details.",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -863,10 +968,12 @@
         "tags": [
           "Tickets"
         ],
+        "summary": "Retrieves the available seats for a specific show.",
         "parameters": [
           {
             "name": "showId",
             "in": "path",
+            "description": "The ID of the show to retrieve available seats for.",
             "required": true,
             "schema": {
               "type": "string",
@@ -886,10 +993,12 @@
         "tags": [
           "Tickets"
         ],
+        "summary": "Cancels a ticket and restores the seats.",
         "parameters": [
           {
             "name": "ticketId",
             "in": "path",
+            "description": "The ID of the ticket to cancel.",
             "required": true,
             "schema": {
               "type": "string",
@@ -909,10 +1018,12 @@
         "tags": [
           "Tickets"
         ],
+        "summary": "Retrieves the details of a specific ticket.",
         "parameters": [
           {
             "name": "ticketId",
             "in": "path",
+            "description": "The ID of the ticket to retrieve details for.",
             "required": true,
             "schema": {
               "type": "string",
@@ -932,6 +1043,7 @@
         "tags": [
           "Tickets"
         ],
+        "summary": "Retrieves all booked tickets.",
         "responses": {
           "200": {
             "description": "OK"
@@ -944,10 +1056,12 @@
         "tags": [
           "Tickets"
         ],
+        "summary": "Retrieves all tickets booked by a specific customer.",
         "parameters": [
           {
             "name": "customerId",
             "in": "path",
+            "description": "The ID of the customer to retrieve tickets for.",
             "required": true,
             "schema": {
               "type": "string",
@@ -967,6 +1081,7 @@
         "tags": [
           "User"
         ],
+        "summary": "Retrieves all users.",
         "responses": {
           "200": {
             "description": "OK"
@@ -977,7 +1092,9 @@
         "tags": [
           "User"
         ],
+        "summary": "Adds a new user.",
         "requestBody": {
+          "description": "The user details to add.",
           "content": {
             "application/json-patch+json": {
               "schema": {
@@ -1013,10 +1130,35 @@
         "tags": [
           "User"
         ],
+        "summary": "Deletes a user.",
         "parameters": [
           {
             "name": "userid",
             "in": "path",
+            "description": "The ID of the user to delete.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Retrieves a specific user by their ID.",
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "path",
+            "description": "The ID of the user to retrieve.",
             "required": true,
             "schema": {
               "type": "string",
@@ -1326,7 +1468,7 @@
         "type": "object",
         "properties": {
           "rating": {
-            "maximum": 10,
+            "maximum": 5,
             "minimum": 0,
             "type": "number",
             "format": "double"

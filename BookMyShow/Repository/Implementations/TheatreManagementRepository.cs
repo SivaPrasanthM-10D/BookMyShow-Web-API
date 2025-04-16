@@ -116,6 +116,37 @@ namespace BookMyShow.Repository.Implementations
             return shows;
         }
 
+        public async Task<ShowResponseDto> GetShowAsync(Guid showid)
+        {
+            ShowResponseDto? show = await dbContext.Shows
+                .Include(sh => sh.Screen)
+                    .ThenInclude(sc => sc.Theatre)
+                        .ThenInclude(t => t.TheatreOwner)
+                .Where(sh => sh.ShowId == showid)
+                .Select(s => new ShowResponseDto
+                {
+                    ShowId = s.ShowId,
+                    ScreenId = s.ScreenId,
+                    ScreenNumber = s.Screen.ScreenNumber,
+                    TheatreId = s.Screen.TheatreId,
+                    TheatreName = s.Screen.Theatre.TheatreName,
+                    MovieId = s.MovieId,
+                    ShowTime = DateTime.Today.Add(s.ShowTime).ToString("hh:mm tt", CultureInfo.InvariantCulture),
+                    ShowDate = s.ShowDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    AvailableSeats = s.AvailableSeats,
+                    TicketPrice = s.TicketPrice
+                })
+                .FirstOrDefaultAsync();
+
+            if (show == null)
+            {
+                throw new ShowNotFoundException("Show not found.");
+            }
+
+            return show;
+        }
+
+
         /// <summary>
         /// Retrieves all shows by the movie name.
         /// </summary>
@@ -159,11 +190,22 @@ namespace BookMyShow.Repository.Implementations
                 .Include(t => t.TheatreOwner)
                 .Include(t => t.Screens)
                 .FirstOrDefaultAsync(t => t.TheatreId == addScreenDto.TheatreId);
+
             if (theatre == null)
             {
                 throw new TheatreNotFoundException("Theatre not found.");
             }
 
+            // Check if a screen with the same ScreenNumber already exists for the theatre
+            bool screenExists = await dbContext.Screens
+                .AnyAsync(s => s.TheatreId == addScreenDto.TheatreId && s.ScreenNumber == addScreenDto.ScreenNumber);
+
+            if (screenExists)
+            {
+                throw new InvalidOperationException($"A screen with number {addScreenDto.ScreenNumber} already exists for this theatre.");
+            }
+
+            // Add the new screen
             var screen = new Screen
             {
                 ScreenNumber = addScreenDto.ScreenNumber,
@@ -327,7 +369,7 @@ namespace BookMyShow.Repository.Implementations
             }
 
             show.MovieId = updateShowDto.MovieId;
-            show.ShowTime = TimeSpan.ParseExact(updateShowDto.ShowTime, @"hh\:mm tt", CultureInfo.InvariantCulture);
+            show.ShowTime = DateTime.ParseExact(updateShowDto.ShowTime, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
             show.ShowDate = DateTime.ParseExact(updateShowDto.ShowDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             show.AvailableSeats = updateShowDto.AvailableSeats;
             show.TicketPrice = updateShowDto.TicketPrice;

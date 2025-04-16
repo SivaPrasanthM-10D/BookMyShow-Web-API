@@ -89,7 +89,7 @@ namespace BookMyShow.Controllers
         /// <returns>A list of shows for the specified screen.</returns>
         [Authorize(Roles = "TheatreOwner")]
         [HttpGet]
-        [Route("Shows/{screenid:guid}")]
+        [Route("Shows/{screenid}")]
         public async Task<IActionResult> GetAllShows(Guid screenid)
         {
             List<ShowResponseDto> shows = await _theatreManagementRepository.GetAllShowsAsync(screenid);
@@ -101,13 +101,38 @@ namespace BookMyShow.Controllers
         }
 
         /// <summary>
+        /// Retrieves a specific show by its ID.
+        /// </summary>
+        /// <param name="showid">The ID of the show to retrieve.</param>
+        /// <returns>The details of the specified show.</returns>
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("Show/{showid}")]
+        public async Task<IActionResult> GetShow(Guid showid)
+        {
+            try
+            {
+                ShowResponseDto show = await _theatreManagementRepository.GetShowAsync(showid);
+                return Ok(show);
+            }
+            catch (ShowNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// Retrieves all shows for a specific movie name.
         /// </summary>
         /// <param name="movieName">The name of the movie to retrieve shows for.</param>
         /// <returns>A list of shows for the specified movie name.</returns>
         [Authorize(Roles = "TheatreOwner,Customer")]
         [HttpGet]
-        [Route("Shows/{movieName}")]
+        [Route("Shows/ByMovie/{movieName}")]
         public async Task<IActionResult> GetAllShows(string movieName)
         {
             List<ShowResponseDto> shows = await _theatreManagementRepository.GetAllShowsByMovieNameAsync(movieName);
@@ -125,6 +150,7 @@ namespace BookMyShow.Controllers
         /// <param name="addScreenDto">The screen details to add.</param>
         /// <returns>The added screen.</returns>
         /// <exception cref="NotFoundException">Thrown when the theatre is not found.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when a duplicate screen is detected.</exception>
         [Authorize(Roles = "TheatreOwner")]
         [HttpPost]
         [Route("Screen")]
@@ -138,6 +164,14 @@ namespace BookMyShow.Controllers
             catch (NotFoundException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 

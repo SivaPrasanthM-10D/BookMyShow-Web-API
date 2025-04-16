@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using BookMyShow.Data;
 using BookMyShow.Repository.Implementations;
@@ -13,10 +14,23 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddCors(options =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookMyShow API", Version = "v1" });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    options.AddPolicy("AllowAngularApp", builder =>
+    {
+        builder.WithOrigins("http://localhost:4200")
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
+
+
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "BookMyShow API", Version = "v1" });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
         Description = "Please enter JWT with Bearer into field",
@@ -25,7 +39,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer",
         BearerFormat = "JWT"
     });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
@@ -39,6 +53,13 @@ builder.Services.AddSwaggerGen(c =>
             new string[] { }
         }
     });
+
+    // Generate XML file path dynamically
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+    // Include XML comments in Swagger
+    options.IncludeXmlComments(xmlPath);
 });
 
 builder.Services.AddAuthentication(options =>
@@ -88,9 +109,14 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+
+
 app.UseHttpsRedirection();
 
+
 app.UseAuthentication();
+
+app.UseCors("AllowAngularApp");
 
 app.UseAuthorization();
 

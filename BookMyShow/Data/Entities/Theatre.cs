@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookMyShow.Data.Entities
 {
@@ -13,7 +14,8 @@ namespace BookMyShow.Data.Entities
 
         [Required]
         public Guid TheatreOwnerId { get; set; }
-        public TheatreOwner TheatreOwner { get; set; }
+        [ForeignKey(nameof(TheatreOwnerId))]
+        public TheatreOwner TheatreOwner { get; set; } = null!;
 
         public ICollection<Screen> Screens { get; set; } = new List<Screen>();
 

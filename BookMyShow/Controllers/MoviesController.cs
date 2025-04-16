@@ -1,5 +1,5 @@
 ﻿using BookMyShow.Data.Entities;
-using BookMyShow.Exceptions;
+using BookMyShow.Models.CommonDTOs;
 using BookMyShow.Models.MovieDTOs;
 using BookMyShow.Models.TheatreDTOs;
 using BookMyShow.Repository.IRepository;
@@ -24,19 +24,15 @@ namespace BookMyShow.Controllers
         /// Retrieves all movies.
         /// </summary>
         /// <returns>A list of movies.</returns>
-        [Authorize(Roles = "TheatreOwner,Admin,Customer")]
+        /// <response code="200">Returns the list of movies</response>
+        /// <response code="404">If no movies are found</response>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAllMovies()
         {
-            try
-            {
-                List<Movie>? movies = await _movieRepository.GetAllMoviesAsync();
-                return Ok(movies);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            ServiceResult<List<Movie>?> result = await _movieRepository.GetAllMoviesAsync();
+            if (result.Success) return Ok(result);
+            return NotFound(result);
         }
 
         /// <summary>
@@ -44,20 +40,16 @@ namespace BookMyShow.Controllers
         /// </summary>
         /// <param name="id">The ID of the movie to retrieve.</param>
         /// <returns>The movie with the specified ID.</returns>
-        [Authorize(Roles = "TheatreOwner,Admin")]
+        /// <response code="200">Returns the movie with the specified ID</response>
+        /// <response code="404">If the movie is not found</response>
+        [AllowAnonymous]
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<IActionResult> GetMovieById(Guid id)
         {
-            try
-            {
-                Movie? movie = await _movieRepository.GetMovieByIdAsync(id);
-                return Ok(movie);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            ServiceResult<Movie?> result = await _movieRepository.GetMovieByIdAsync(id);
+            if (result.Success) return Ok(result);
+            return NotFound(result);
         }
 
         /// <summary>
@@ -65,20 +57,16 @@ namespace BookMyShow.Controllers
         /// </summary>
         /// <param name="title">The title of the movies to retrieve.</param>
         /// <returns>A list of movies with the specified title.</returns>
+        /// <response code="200">Returns the list of movies with the specified title</response>
+        /// <response code="404">If no movies are found with the specified title</response>
         [Authorize(Roles = "TheatreOwner,Admin,Customer")]
         [HttpGet]
         [Route("{title}")]
-        public async Task<IActionResult> GetMovieByTitle(string title)
+        public async Task<IActionResult> GetMovieByTitleAsync(string title)
         {
-            try
-            {
-                List<Movie>? movies = await _movieRepository.GetMovieByTitleAsync(title);
-                return Ok(movies);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            ServiceResult<List<Movie>?> result = await _movieRepository.GetMovieByTitleAsync(title);
+            if (result.Success) return Ok(result);
+            return NotFound(result);
         }
 
         /// <summary>
@@ -86,19 +74,15 @@ namespace BookMyShow.Controllers
         /// </summary>
         /// <param name="addmoviedto">The movie details to add.</param>
         /// <returns>The added movie.</returns>
+        /// <response code="200">Returns the added movie</response>
+        /// <response code="404">If the movie could not be added</response>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddMovie(AddMovieDto addmoviedto)
         {
-            try
-            {
-                Movie? result = await _movieRepository.AddMovieAsync(addmoviedto);
-                return Ok(result);
-            }
-            catch (NotFoundException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            ServiceResult<Movie?> result = await _movieRepository.AddMovieAsync(addmoviedto);
+            if (result.Success) return Ok(result);
+            return NotFound(result);
         }
 
         /// <summary>
@@ -107,20 +91,16 @@ namespace BookMyShow.Controllers
         /// <param name="id">The ID of the movie to update.</param>
         /// <param name="updatemoviedto">The updated movie details.</param>
         /// <returns>The updated movie.</returns>
+        /// <response code="200">Returns the updated movie</response>
+        /// <response code="404">If the movie to update is not found</response>
         [Authorize(Roles = "Admin")]
         [HttpPut]
         [Route("{id:guid}")]
         public async Task<IActionResult> UpdateMovie(Guid id, UpdateMovieDto updatemoviedto)
         {
-            try
-            {
-                Movie? movie = await _movieRepository.UpdateMovieAsync(id, updatemoviedto);
-                return Ok(movie);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            ServiceResult<Movie?> result = await _movieRepository.UpdateMovieAsync(id, updatemoviedto);
+            if (result.Success) return Ok(result);
+            return NotFound(result);
         }
 
         /// <summary>
@@ -128,20 +108,16 @@ namespace BookMyShow.Controllers
         /// </summary>
         /// <param name="id">The ID of the movie to delete.</param>
         /// <returns>A message indicating the result of the deletion.</returns>
+        /// <response code="200">Returns a message indicating the result of the deletion</response>
+        /// <response code="404">If the movie to delete is not found</response>
         [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("{id:guid}")]
         public async Task<IActionResult> DeleteMovie(Guid id)
         {
-            try
-            {
-                string? result = await _movieRepository.DeleteMovieAsync(id);
-                return Ok(result);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            ServiceResult<string?> result = await _movieRepository.DeleteMovieAsync(id);
+            if (result.Success) return Ok(result);
+            return NotFound(result);
         }
 
         /// <summary>
@@ -150,6 +126,9 @@ namespace BookMyShow.Controllers
         /// <param name="id">The ID of the movie to patch.</param>
         /// <param name="patchmovie">The JSON patch document.</param>
         /// <returns>The patched movie.</returns>
+        /// <response code="200">Returns the patched movie</response>
+        /// <response code="400">If the JSON patch document is invalid</response>
+        /// <response code="404">If the movie to patch is not found</response>
         [Authorize(Roles = "Admin")]
         [HttpPatch]
         [Route("{id:guid}")]
@@ -157,17 +136,11 @@ namespace BookMyShow.Controllers
         {
             if (patchmovie == null)
             {
-                return BadRequest();
+                return BadRequest(new ServiceResult<Movie?> { Success = false, StatusCode = 400, Message = "Invalid JSON patch document.", Data = null });
             }
-            try
-            {
-                Movie? movie = await _movieRepository.EditMovieAsync(id, patchmovie);
-                return Ok(movie);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            ServiceResult<Movie?> result = await _movieRepository.EditMovieAsync(id, patchmovie);
+            if (result.Success) return Ok(result);
+            return NotFound(result);
         }
     }
 }

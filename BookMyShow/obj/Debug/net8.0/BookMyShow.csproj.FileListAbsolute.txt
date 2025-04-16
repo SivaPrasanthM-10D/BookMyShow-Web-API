@@ -353,3 +353,6 @@ C:\Users\10decoders\Documents\ASP .NET Training\BookMyShow\obj\Debug\net8.0\Book
 C:\Users\10decoders\Documents\ASP .NET Training\BookMyShow\obj\Debug\net8.0\BookMyShow.genruntimeconfig.cache
 C:\Users\10decoders\Documents\ASP .NET Training\BookMyShow\obj\Debug\net8.0\ref\BookMyShow.dll
 C:\Users\10decoders\Documents\ASP .NET Training\BookMyShow\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\10decoders\Documents\ASP .NET Training\BookMyShow\bin\Debug\net8.0\BookMyShow.xml
+C:\Users\10decoders\Documents\ASP .NET Training\BookMyShow\obj\Debug\net8.0\BookMyShow.xml
+C:\Users\10decoders\Documents\ASP .NET Training\BookMyShow\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.InMemory.dll

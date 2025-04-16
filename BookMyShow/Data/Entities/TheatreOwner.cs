@@ -10,6 +10,6 @@ namespace BookMyShow.Data.Entities
         [StringLength(100)]
         public required string TheatreOwnerName { get; set; }
 
-        public Theatre? Theatre { get; set; }
+        public ICollection<Theatre> Theatres { get; set; } = new List<Theatre>();
     }
 }

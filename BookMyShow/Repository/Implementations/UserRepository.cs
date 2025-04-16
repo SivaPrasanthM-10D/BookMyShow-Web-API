@@ -171,5 +171,11 @@ namespace BookMyShow.Repository.Implementations
             await dbContext.SaveChangesAsync();
             return "User deleted successfully";
         }
+
+        public async Task<User?> GetUserAsync(Guid userid)
+        {
+            User? user = await dbContext.Users.FindAsync(userid);
+            return user;
+        }
     }
 }

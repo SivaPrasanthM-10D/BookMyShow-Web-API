@@ -32,7 +32,7 @@ namespace BookMyShow.Data
 
             modelBuilder.Entity<Theatre>()
                 .HasOne(t => t.TheatreOwner)
-                .WithMany()
+                .WithMany(to => to.Theatres)
                 .HasForeignKey(t => t.TheatreOwnerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -56,7 +56,7 @@ namespace BookMyShow.Data
 
             modelBuilder.Entity<Ticket>()
                 .HasOne(t => t.Customer)
-                .WithMany()
+                .WithMany(c => c.Tickets)
                 .HasForeignKey(t => t.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
 

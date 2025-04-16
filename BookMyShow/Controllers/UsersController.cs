@@ -81,5 +81,36 @@ namespace BookMyShow.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Retrieves a specific user by their ID.
+        /// </summary>
+        /// <param name="userid">The ID of the user to retrieve.</param>
+        /// <returns>The details of the specified user.</returns>
+        /// <exception cref="NotFoundException">Thrown when the user is not found.</exception>
+        [Authorize(Roles = "Admin,TheatreOwner,Customer")]
+        [HttpGet]
+        [Route("{userid:guid}")]
+        public async Task<IActionResult> GetUser(Guid userid)
+        {
+            try
+            {
+                User? user = await _userRepository.GetUserAsync(userid);
+                if (user == null)
+                {
+                    throw new NotFoundException("User not found.");
+                }
+                return Ok(user);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
     }
 }

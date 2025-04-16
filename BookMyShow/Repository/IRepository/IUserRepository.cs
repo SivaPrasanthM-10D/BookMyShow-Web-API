@@ -8,5 +8,6 @@ namespace BookMyShow.Repository.IRepository
         Task<List<User>> GetAllUsersAsync();
         Task<User?> AddUsersAsync(AddUserDto adduserdto);
         Task<string?> DeleteUserAsync(Guid userid);
+        Task<User?> GetUserAsync(Guid userid);
     }
 }

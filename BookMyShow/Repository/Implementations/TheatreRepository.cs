@@ -33,26 +33,43 @@ namespace BookMyShow.Repository.Implementations
         /// <exception cref="TheatreOwnerNotFoundException">Thrown when the theatre owner is not found.</exception>
         public async Task<TheatreOwnerSummaryDto?> GetTheatreAsync(Guid ownerid)
         {
-            TheatreOwner? theatreOwner = await dbContext.TheatreOwners
-                .Include(to => to.Theatre)
+            var theatreOwner = await dbContext.TheatreOwners
+                .Include(to => to.Theatres)
+                    .ThenInclude(t => t.Screens)
+                        .ThenInclude(s => s.Shows)
                 .FirstOrDefaultAsync(to => to.TheatreOwnerId == ownerid);
 
             if (theatreOwner == null)
-            {
                 throw new TheatreOwnerNotFoundException("Theatre owner not found.");
-            }
+
+            var theatre = theatreOwner.Theatres.FirstOrDefault();
 
             return new TheatreOwnerSummaryDto
             {
                 TheatreOwnerId = theatreOwner.TheatreOwnerId,
                 TheatreOwnerName = theatreOwner.TheatreOwnerName,
-                Theatre = theatreOwner.Theatre != null ? new TheatreDto
+                Theatre = theatre != null ? new TheatreDto
                 {
-                    TheatreId = theatreOwner.Theatre.TheatreId,
-                    TheatreName = theatreOwner.Theatre.TheatreName,
-                    TheatreOwnerId = theatreOwner.TheatreOwnerId,
-                    City = theatreOwner.Theatre.City,
-                    Street = theatreOwner.Theatre.Street
+                    TheatreId = theatre.TheatreId,
+                    TheatreName = theatre.TheatreName,
+                    TheatreOwnerId = theatre.TheatreOwnerId,
+                    City = theatre.City,
+                    Street = theatre.Street,
+                    Screens = theatre.Screens.Select(screen => new ScreenDto
+                    {
+                        ScreenId = screen.ScreenId,
+                        ScreenNumber = screen.ScreenNumber,
+                        TheatreId = screen.TheatreId,
+                        Shows = screen.Shows.Select(show => new ShowDto
+                        {
+                            ShowId = show.ShowId,
+                            MovieId = show.MovieId,
+                            ShowTime = show.ShowTime,
+                            ShowDate = show.ShowDate,
+                            TicketPrice = show.TicketPrice,
+                            AvailableSeats = show.AvailableSeats
+                        }).ToList()
+                    }).ToList()
                 } : null
             };
         }
@@ -66,7 +83,7 @@ namespace BookMyShow.Repository.Implementations
         /// <exception cref="TheatreOwnerNotFoundException">Thrown when the theatre owner is not found.</exception>
         public async Task<TheatreDto?> AddTheatreToTheatreOwnerAsync(Guid ownerid, AddTheatreDto addtheatredto)
         {
-            TheatreOwner? theatreOwner = await dbContext.TheatreOwners.Include(to => to.Theatre).FirstOrDefaultAsync(to => to.TheatreOwnerId == ownerid);
+            TheatreOwner? theatreOwner = await dbContext.TheatreOwners.Include(to => to.Theatres).FirstOrDefaultAsync(to => to.TheatreOwnerId == ownerid);
             if (theatreOwner == null)
             {
                 throw new TheatreOwnerNotFoundException("Theatre owner not found.");
@@ -79,7 +96,7 @@ namespace BookMyShow.Repository.Implementations
                 TheatreOwnerId = theatreOwner.TheatreOwnerId
             };
             await dbContext.Theatres.AddAsync(theatre);
-            theatreOwner.Theatre = theatre;
+            theatreOwner.Theatres.Add(theatre);
             await dbContext.SaveChangesAsync();
             return new TheatreDto
             {
@@ -101,7 +118,7 @@ namespace BookMyShow.Repository.Implementations
         public async Task<string?> DeleteTheatreAsync(Guid ownerid)
         {
             TheatreOwner? theatreOwner = await dbContext.TheatreOwners
-                .Include(to => to.Theatre)
+                .Include(to => to.Theatres)
                 .FirstOrDefaultAsync(to => to.TheatreOwnerId == ownerid);
 
             if (theatreOwner == null)
@@ -109,13 +126,14 @@ namespace BookMyShow.Repository.Implementations
                 throw new TheatreOwnerNotFoundException("Theatre owner not found.");
             }
 
-            if (theatreOwner.Theatre == null)
+            Theatre? theatre = theatreOwner.Theatres.FirstOrDefault();
+            if (theatre == null)
             {
                 throw new TheatreNotFoundException("Theatre not found.");
             }
 
-            dbContext.Theatres.Remove(theatreOwner.Theatre);
-            theatreOwner.Theatre = null;
+            dbContext.Theatres.Remove(theatre);
+            theatreOwner.Theatres.Remove(theatre);
             await dbContext.SaveChangesAsync();
 
             return "Theatre deleted successfully";

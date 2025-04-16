@@ -11,6 +11,7 @@ namespace BookMyShow.Data.Entities
         [StringLength(100)]
         public string CustomerName { get; set; }
 
-        public List<Ticket> Tickets { get; set; } = new List<Ticket>();
+        // Updated to ICollection to reflect a one-to-many relationship
+        public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     }
 }
