@@ -1,0 +1,95 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|c:\\users\\10decoders\\documents\\asp .net training\\bookmyshow\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|c:\\users\\10decoders\\documents\\asp .net training\\bookmyshow\\repository\\implementations\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|solutionrelative:repository\\implementations\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|c:\\users\\10decoders\\documents\\asp .net training\\bookmyshow\\repository\\irepository\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C11788B2-4B3C-4FFD-9603-48FA2BFEF1BB}|BookMyShow.csproj|solutionrelative:repository\\irepository\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 287,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{f37f5141-198e-4181-9582-7b026ee8f915}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1824343154:0:{bf84ea66-d821-4dba-b1b1-2777d8574775}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:293798257:0:{bf84ea66-d821-4dba-b1b1-2777d8574775}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
+              "ToolTip": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "Controllers\\UsersController.cs",
+              "ViewState": "AgIAAFkAAAAAAAAAAAAIwGAAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-16T05:19:36.643Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "IUserRepository.cs",
+              "DocumentMoniker": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Repository\\IRepository\\IUserRepository.cs",
+              "RelativeDocumentMoniker": "Repository\\IRepository\\IUserRepository.cs",
+              "ToolTip": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Repository\\IRepository\\IUserRepository.cs",
+              "RelativeToolTip": "Repository\\IRepository\\IUserRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-16T05:19:03.395Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UserRepository.cs",
+              "DocumentMoniker": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Repository\\Implementations\\UserRepository.cs",
+              "RelativeDocumentMoniker": "Repository\\Implementations\\UserRepository.cs",
+              "ToolTip": "C:\\Users\\10decoders\\Documents\\ASP .NET Training\\BookMyShow\\Repository\\Implementations\\UserRepository.cs",
+              "RelativeToolTip": "Repository\\Implementations\\UserRepository.cs",
+              "ViewState": "AgIAAKgAAAAAAAAAAAAAALMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-16T05:18:51.787Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
